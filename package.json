@@ -24,5 +24,8 @@
   "homepage": "https://github.com/panocms/routve#readme",
   "peerDependencies": {
     "svelte": "3.x"
+  },
+  "dependencies": {
+    "svelte-loadable": "^1.4.0"
   }
 }
