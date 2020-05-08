@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/panocms/routve/issues"
   },
-  "homepage": "https://github.com/panocms/routve#readme"
+  "homepage": "https://github.com/panocms/routve#readme",
+  "peerDependencies": {
+    "svelte": "3.x"
+  }
 }
