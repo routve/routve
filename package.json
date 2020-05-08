@@ -1,0 +1,24 @@
+{
+  "name": "routve",
+  "version": "1.0.0",
+  "description": "Routve is an advanced Svelte 3 router.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/panocms/routve.git"
+  },
+  "keywords": [
+    "svelte",
+    "router",
+    "frontend"
+  ],
+  "author": "Pano",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/panocms/routve/issues"
+  },
+  "homepage": "https://github.com/panocms/routve#readme"
+}
