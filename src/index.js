@@ -1,9 +1,16 @@
-// TODO: Add scrollBehavior
-// TODO: mode, base, linkExactActiveClass, linkActiveClass
+// original source: https://github.com/hmmhmmhm/svelte-spa-chunk/blob/master/src/index.ts
+export const ChunkGenerator = (Component) => {
+  return (dynamicImport) => Chunk(dynamicImport, Component);
+};
 
-export default class Routve {
-  constructor({ ...props }) {
-    // routes (props.routes)
-    return props;
-  }
-}
+const Chunk = (dynamicImport, Component) => {
+  return class SvelteComponentHook {
+    constructor(options) {
+      options.props = Object.assign(Object.assign({}, options.props), { dynamicImport });
+      return new Component(options);
+    }
+  };
+};
+
+export { default as Router } from "./Router.svelte";
+export { default as Chunk } from "./Chunk.svelte";
