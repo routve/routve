@@ -26,6 +26,17 @@ export default {
         }
       }
     },
+    "/nested-route-params-page": {
+      component: () => import("./pages/NestedRouteParamsTestPage.svelte"),
+      children: {
+        "" : {
+          component: () => import("./pages/NestedRouteParamsTest/DefaultPage.svelte")
+        },
+        "/example/:page": {
+          component: () => import("./pages/NestedRouteParamsTest/ExamplePage.svelte")
+        }
+      }
+    },
     "*": {
       component: () => import("./pages/Error404.svelte"),
       chunk
