@@ -1,13 +1,11 @@
 <script>
-  import { Router, ChunkGenerator, Chunk } from "../src/index";
+  import { Router, ChunkGenerator } from "../src/index";
+  import chunk from "./Chunk.svelte";
 
   import DefaultPage from "./pages/DefaultPage.svelte";
   import TestPage from "./pages/TestPage.svelte";
-  import Error404 from "./pages/Error404.svelte";
 
   import Navigator from "./components/Navigator.svelte";
-
-  const ChunkComponent = ChunkGenerator(Chunk);
 
   const config = {
     routes: {
@@ -18,10 +16,10 @@
         component: TestPage,
       },
       "/test-page-async": {
-        component: ChunkComponent(() => import("./pages/TestPageAsync.svelte")),
+        component: ChunkGenerator(() => import("./pages/TestPageAsync.svelte")),
       },
       "*": {
-        component: Error404,
+        component: () => import("./pages/Error404.svelte"),
       },
     },
   };
