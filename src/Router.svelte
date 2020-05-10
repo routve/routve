@@ -10,7 +10,7 @@
     basePageInstance,
   } from "./RouterStore";
 
-  import ChunkPage from "./chunk.svelte";
+  import defaultChunkPage from "./chunk.svelte";
 
   let props = {};
 
@@ -95,7 +95,10 @@
 
         props = {
           component: (route.component.name === "component")
-            ? chunk(route.component, routerConfig.chunk)
+            ? chunk(
+              route.component,
+              routerConfig.chunk || defaultChunkPage
+            )
             : route.component,
           params: params,
         };
