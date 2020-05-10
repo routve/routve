@@ -13,6 +13,7 @@
   import defaultChunkPage from "./Chunk.svelte";
 
   let props = {};
+  let component = null;
 
   export let routerConfig = Config;
 
@@ -48,11 +49,11 @@
       constructor(options) {
         options.props = {
           ...options.props,
-          dynamicImport
+          dynamicImport,
         };
         return new Component(options);
       }
-    }
+    };
   }
 
   (function setupRouter(paths, parent = "", parentHandler = null) {
@@ -93,15 +94,22 @@
           params[key] = context.params[key];
         });
 
-        props = {
-          component: (route.component.name === "component")
-            ? chunk(
-              route.component,
-              routerConfig.chunk || defaultChunkPage
-            )
-            : route.component,
-          params: params,
-        };
+        console.log(route.component.name)
+
+        const routeComponent =
+          route.component.name === "component"
+            ? chunk(route.component, routerConfig.chunk || defaultChunkPage)
+            : route.component;
+
+        component = routeComponent;
+
+        if (route.component.name === "component" || route.component.name === "SvelteComponentHook")
+          props = {
+            component: routeComponent,
+            params: params,
+          };
+        else
+          props = {};
       };
 
       pageInstance(
@@ -150,5 +158,5 @@
 </script>
 
 <div hidden="{hidden}">
-  <svelte:component this="{props.component}" {...props} />
+  <svelte:component this="{component}" {...props} />
 </div>
