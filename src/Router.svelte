@@ -39,7 +39,7 @@
   }
 
   if (!nestedRoute) {
-    // pageInstance("*", parseRoute);
+    pageInstance("*", parseRoute);
   }
 
   // Load Chunk
