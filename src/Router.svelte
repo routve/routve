@@ -90,11 +90,11 @@
           params.pageJsInstance = pageInstance;
         }
 
-        Object.keys(context.params).forEach((key) => {
-          if (key !== "0" && path !== "*") {
-            params[key] = context.params[key];
-          }
-        });
+        Object.keys(context.params).forEach((key) =>
+          key !== "0" && path !== "*"
+            ? (params[key] = context.params[key])
+            : null
+        );
 
         const routeComponent =
           route.component.name === "component"
