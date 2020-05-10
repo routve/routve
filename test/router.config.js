@@ -5,7 +5,7 @@ import TestPage from "./pages/TestPage.svelte";
 
 import NestedRoutePage from "./pages/NestedRoutePage.svelte";
 import NestedDefaultPage from "./pages/NestedRoute/DefaultPage.svelte";
-import NestedExamplePage from "./pages/NestedRoute/DefaultPage.svelte";
+import NestedExamplePage from "./pages/NestedRoute/ExamplePage.svelte";
 
 export default {
   routes: {
