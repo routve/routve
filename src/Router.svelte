@@ -33,9 +33,7 @@
   pageInstance.base(basePath);
 
   function parseRoute(ctx, next) {
-    if (get(path) !== ctx.pathname) {
-      path.set(ctx.pathname);
-    }
+    if (get(path) !== ctx.pathname) path.set(ctx.pathname);
 
     next();
   }
@@ -45,11 +43,6 @@
   }
 
   (function setupRouter(paths, parent = "", parentHandler = null) {
-    if (typeof paths === "undefined") {
-      console.log($subRouterRoutesByBasePath[basePath]);
-      console.log(basePath);
-    }
-
     Object.keys(paths).forEach((path) => {
       const route = paths[path];
 
@@ -113,13 +106,12 @@
         parentHandler === null ? handler : parentHandler
       );
 
-      if (route.children !== null && typeof route.children === "object") {
+      if (route.children !== null && typeof route.children === "object")
         setupRouter(
           route.children,
           parent + path,
           parentHandler === null ? handler : parentHandler
         );
-      }
     });
   })(routes);
 
@@ -133,25 +125,20 @@
     });
 
     onDestroy(pathUnsubscribe);
-    onDestroy(() => {
+    onDestroy(() =>
       subRouterRoutesByBasePath.update((list) => {
         const newList = [];
 
-        console.log("silinecek: " + basePath);
         Object.keys(list)
           .filter((key) => key !== pageInstance.base())
-          .forEach((key) => {
-            newList[key] = list[key];
-          });
+          .forEach((key) => (newList[key] = list[key]));
 
         return newList;
-      });
-    });
+      })
+    );
   }
 
-  onDestroy(() => {
-    pageInstance.stop();
-  });
+  onDestroy(() => pageInstance.stop());
 </script>
 
 <div hidden="{hidden}">
