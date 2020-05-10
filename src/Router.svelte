@@ -91,7 +91,9 @@
         }
 
         Object.keys(context.params).forEach((key) => {
-          params[key] = context.params[key];
+          if (key !== "0" && path !== "*") {
+            params[key] = context.params[key];
+          }
         });
 
         const routeComponent =
@@ -101,13 +103,15 @@
 
         component = routeComponent;
 
-        if (route.component.name === "component" || route.component.name === "SvelteComponentHook")
+        if (
+          route.component.name === "component" ||
+          route.component.name === "SvelteComponentHook"
+        )
           props = {
             component: routeComponent,
             params,
           };
-        else
-          props = params;
+        else props = params;
       };
 
       pageInstance(
