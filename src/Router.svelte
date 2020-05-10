@@ -8,7 +8,7 @@
   import {
     path,
     subRouterRoutesByBasePath,
-    basePageInstance,
+    basePageInstance
   } from "./RouterStore";
 
   import DefaultChunkComponent from "./Chunk.svelte";
@@ -42,9 +42,21 @@
     pageInstance("*", parseRoute);
   }
 
-  (function setupRouter(paths, parent = "", parentHandler = null) {
+  (function setupRouter(
+    paths,
+    parent = "",
+    parentHandler = null,
+    parentPath = "",
+    parentComponent = null
+  ) {
     Object.keys(paths).forEach((path) => {
       const route = paths[path];
+
+      if (route.component.name === "component")
+        route.component = ChunkGenerator(
+          route.component,
+          route.chunk || routerConfig.chunk || DefaultChunkComponent
+        );
 
       const handler = (context) => {
         if (route.children !== null && typeof route.children === "object") {
@@ -77,16 +89,15 @@
         }
 
         Object.keys(context.params).forEach((key) =>
-          key !== "0" && path !== "*"
+          key !== "0" &&
+          path !== "*" &&
+          (
+            route.component !== parentComponent &&
+            path.includes(":" + key)
+          )
             ? (params[key] = context.params[key])
             : null
         );
-
-        if (route.component.name === "component")
-          route.component = ChunkGenerator(
-            route.component,
-            route.chunk || routerConfig.chunk || DefaultChunkComponent
-          );
 
         component = route.component;
 
@@ -96,7 +107,7 @@
         )
           props = {
             component: route.component,
-            params,
+            params
           };
         else props = params;
       };
@@ -110,7 +121,9 @@
         setupRouter(
           route.children,
           parent + path,
-          parentHandler === null ? handler : parentHandler
+          parentHandler === null ? handler : parentHandler,
+          parent,
+          route.component
         );
     });
   })(routes);
@@ -142,5 +155,5 @@
 </script>
 
 <div hidden="{hidden}">
-  <svelte:component this="{component}" {...props} />
+  <svelte:component this="{component}" {...props}/>
 </div>

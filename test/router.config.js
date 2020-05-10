@@ -34,6 +34,9 @@ export default {
         },
         "/example/:page": {
           component: () => import("./pages/NestedRouteParamsTest/ExamplePage.svelte")
+        },
+        "/:page": {
+          component: () => import("./pages/NestedRouteParamsTest/ExampleParamPage.svelte")
         }
       }
     },
