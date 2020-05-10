@@ -10,6 +10,8 @@
     basePageInstance,
   } from "./RouterStore";
 
+  import ChunkPage from "./chunk.svelte";
+
   let props = {};
 
   export let routerConfig = Config;
@@ -40,6 +42,19 @@
     // pageInstance("*", parseRoute);
   }
 
+  // Load Chunk
+  function chunk(dynamicImport, Component) {
+    return class SvelteComponentHook {
+      constructor(options) {
+        options.props = {
+          ...options.props,
+          dynamicImport
+        };
+        return new Component(options);
+      }
+    }
+  }
+
   (function setupRouter(paths, parent = "", parentHandler = null) {
     Object.keys(paths).forEach((path) => {
       const route = paths[path];
@@ -48,7 +63,6 @@
         if (route.children !== null && typeof route.children === "object") {
           subRouterRoutesByBasePath.update((value) => {
             value[basePath + path] = route.children;
-
             return value;
           });
         }
@@ -80,7 +94,9 @@
         });
 
         props = {
-          component: route.component,
+          component: (route.component.name === "component")
+            ? chunk(route.component, routerConfig.chunk)
+            : route.component,
           params: params,
         };
       };
