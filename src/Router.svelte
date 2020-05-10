@@ -94,8 +94,6 @@
           params[key] = context.params[key];
         });
 
-        console.log(route.component.name)
-
         const routeComponent =
           route.component.name === "component"
             ? chunk(route.component, routerConfig.chunk || defaultChunkPage)
