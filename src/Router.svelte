@@ -106,10 +106,10 @@
         if (route.component.name === "component" || route.component.name === "SvelteComponentHook")
           props = {
             component: routeComponent,
-            params: params,
+            params,
           };
         else
-          props = {};
+          props = params;
       };
 
       pageInstance(
