@@ -10,7 +10,7 @@
     basePageInstance,
   } from "./RouterStore";
 
-  import defaultChunkPage from "./chunk.svelte";
+  import defaultChunkPage from "./Chunk.svelte";
 
   let props = {};
 
