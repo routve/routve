@@ -1,8 +1,8 @@
 // original source: https://github.com/hmmhmmhm/svelte-spa-chunk/blob/master/src/index.ts
-import ChunkLoadable from './Chunk.svelte';
+import ChunkLoadable from "./Chunk.svelte";
 
-export const ChunkGenerator = (dynamicImport) => {
-  return Chunk(dynamicImport, ChunkLoadable);
+export const ChunkGenerator = (dynamicImport, chunk = ChunkLoadable) => {
+  return Chunk(dynamicImport, chunk);
 };
 
 export const Chunk = (dynamicImport, Component) => {

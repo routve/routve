@@ -1,11 +1,8 @@
 import { ChunkGenerator } from "../src/index";
+import chunk from "./Chunk.svelte";
 
 import DefaultPage from "./pages/DefaultPage.svelte";
 import TestPage from "./pages/TestPage.svelte";
-
-import NestedRoutePage from "./pages/NestedRoutePage.svelte";
-import NestedDefaultPage from "./pages/NestedRoute/DefaultPage.svelte";
-import NestedExamplePage from "./pages/NestedRoute/ExamplePage.svelte";
 
 export default {
   routes: {
@@ -16,16 +13,16 @@ export default {
       component: TestPage,
     },
     "/test-page-async": {
-      component: ChunkGenerator(() => import("./pages/TestPageAsync.svelte")),
+      component: ChunkGenerator(() => import("./pages/TestPageAsync.svelte"), chunk),
     },
     "/nested-route-page": {
-      component: NestedRoutePage,
+      component: () => import("./pages/NestedRoutePage.svelte"),
       children: {
         "" : {
-          component: NestedDefaultPage
+          component: () => import("./pages/NestedRoute/DefaultPage.svelte")
         },
         "/example": {
-          component: NestedExamplePage
+          component: () => import("./pages/NestedRoute/ExamplePage.svelte")
         }
       }
     },

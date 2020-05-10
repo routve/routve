@@ -3,6 +3,7 @@
   import { get } from "svelte/store";
   import page from "page";
   import Config from "./router.config";
+  import { ChunkGenerator } from "./index";
 
   import {
     path,
@@ -10,7 +11,7 @@
     basePageInstance,
   } from "./RouterStore";
 
-  import defaultChunkPage from "./Chunk.svelte";
+  import DefaultChunkComponent from "./Chunk.svelte";
 
   let props = {};
   let component = null;
@@ -43,20 +44,12 @@
     pageInstance("*", parseRoute);
   }
 
-  // Load Chunk
-  function chunk(dynamicImport, Component) {
-    return class SvelteComponentHook {
-      constructor(options) {
-        options.props = {
-          ...options.props,
-          dynamicImport,
-        };
-        return new Component(options);
-      }
-    };
-  }
-
   (function setupRouter(paths, parent = "", parentHandler = null) {
+    if (typeof paths === "undefined") {
+      console.log($subRouterRoutesByBasePath[basePath]);
+      console.log(basePath);
+    }
+
     Object.keys(paths).forEach((path) => {
       const route = paths[path];
 
@@ -96,19 +89,20 @@
             : null
         );
 
-        const routeComponent =
-          route.component.name === "component"
-            ? chunk(route.component, routerConfig.chunk || defaultChunkPage)
-            : route.component;
+        if (route.component.name === "component")
+          route.component = ChunkGenerator(
+            route.component,
+            routerConfig.chunk || DefaultChunkComponent
+          );
 
-        component = routeComponent;
+        component = route.component;
 
         if (
           route.component.name === "component" ||
           route.component.name === "SvelteComponentHook"
         )
           props = {
-            component: routeComponent,
+            component: route.component,
             params,
           };
         else props = params;
@@ -143,6 +137,7 @@
       subRouterRoutesByBasePath.update((list) => {
         const newList = [];
 
+        console.log("silinecek: " + basePath);
         Object.keys(list)
           .filter((key) => key !== pageInstance.base())
           .forEach((key) => {
