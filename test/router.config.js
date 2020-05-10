@@ -28,6 +28,7 @@ export default {
     },
     "*": {
       component: () => import("./pages/Error404.svelte"),
+      chunk
     },
   },
 };

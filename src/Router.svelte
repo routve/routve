@@ -92,7 +92,7 @@
         if (route.component.name === "component")
           route.component = ChunkGenerator(
             route.component,
-            routerConfig.chunk || DefaultChunkComponent
+            route.chunk || routerConfig.chunk || DefaultChunkComponent
           );
 
         component = route.component;
