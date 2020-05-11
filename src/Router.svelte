@@ -30,7 +30,7 @@
   export let basePath = mainBasePath;
 
   const nestedRoute = basePath !== mainBasePath;
-  const pageInstance = nestedRoute ? page.create() : basePageInstance;
+  export let pageInstance = nestedRoute ? page.create() : basePageInstance;
 
   export let routes = nestedRoute
     ? $subRouterRoutesByBasePath[basePath]
