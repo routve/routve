@@ -5,6 +5,7 @@ import DefaultPage from "./pages/DefaultPage.svelte";
 import TestPage from "./pages/TestPage.svelte";
 
 export default {
+  basePath: "",
   routes: {
     "/": {
       component: DefaultPage,

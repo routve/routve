@@ -5,30 +5,29 @@
   import Config from "./router.config";
   import { ChunkGenerator } from "./index";
 
+  import DefaultChunkComponent from "./Chunk.svelte";
+
   import {
     path,
     subRouterRoutesByBasePath,
-    basePageInstance
+    basePageInstance,
   } from "./RouterStore";
 
-  import DefaultChunkComponent from "./Chunk.svelte";
+  export let routerConfig = Config;
+  export let hidden = false;
 
   let props = {};
   let component = null;
 
-  export let routerConfig = Config;
-
-  export const mainBasePath = "";
+  const mainBasePath = routerConfig.basePath || "";
   export let basePath = mainBasePath;
 
   const nestedRoute = basePath !== mainBasePath;
+  const pageInstance = nestedRoute ? page.create() : basePageInstance;
 
   export let routes = nestedRoute
     ? $subRouterRoutesByBasePath[basePath]
     : routerConfig.routes;
-  export let hidden = false;
-
-  const pageInstance = nestedRoute ? page.create() : basePageInstance;
 
   pageInstance.base(basePath);
 
@@ -91,10 +90,8 @@
         Object.keys(context.params).forEach((key) =>
           key !== "0" &&
           path !== "*" &&
-          (
-            route.component !== parentComponent &&
-            path.includes(":" + key)
-          )
+          route.component !== parentComponent &&
+          path.includes(":" + key)
             ? (params[key] = context.params[key])
             : null
         );
@@ -107,7 +104,7 @@
         )
           props = {
             component: route.component,
-            params
+            params,
           };
         else props = params;
       };
@@ -155,5 +152,5 @@
 </script>
 
 <div hidden="{hidden}">
-  <svelte:component this="{component}" {...props}/>
+  <svelte:component this="{component}" {...props} />
 </div>
