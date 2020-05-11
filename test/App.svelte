@@ -1,6 +1,5 @@
 <script>
   import { Router } from "../src/index";
-  import chunk from "./Chunk.svelte";
   import RouterConfig from "./router.config";
 
   import Navigator from "./components/Navigator.svelte";
