@@ -1,5 +1,5 @@
 <script>
-  import { Router } from "../src/index";
+  import Router from "../src/index";
   import RouterConfig from "./router.config";
 
   import Navigator from "./components/Navigator.svelte";

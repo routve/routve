@@ -3,7 +3,7 @@
   import { get } from "svelte/store";
   import page from "page";
   import Config from "./router.config";
-  import { ChunkGenerator } from "./index";
+  import ChunkGenerator from "./ChunkGenerator";
 
   import DefaultChunkComponent from "./Chunk.svelte";
 
