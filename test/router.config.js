@@ -41,6 +41,9 @@ export default {
         }
       }
     },
+    "/programmatically-routed": {
+      component: () => import("./pages/ProgrammaticallyRouted.svelte")
+    },
     "*": {
       component: () => import("./pages/Error404.svelte"),
       chunk

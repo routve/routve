@@ -1,3 +1,11 @@
+<script context="module">
+  import {basePageInstance} from "./RouterStore";
+
+  export function route(route) {
+    basePageInstance(route);
+  }
+</script>
+
 <script>
   import { onDestroy } from "svelte";
   import { get } from "svelte/store";
@@ -10,7 +18,6 @@
   import {
     path,
     subRouterRoutesByBasePath,
-    basePageInstance,
   } from "./RouterStore";
 
   export let routerConfig = Config;
