@@ -1,21 +1,24 @@
 <script>
-  import Router from "../src/index";
+  import Router, { beforeRouteEnter, afterRouteEnter } from "../src/index";
   import RouterConfig from "./router.config";
+  import { onDestroy } from "svelte";
 
   import Navigator from "./components/Navigator.svelte";
 
-  //TODO @Berk
-  // beforeRouteEnter((context, next) => {
-  //   console.log("BeforeRouteEnter" + context.pathname)
-  //
-  //   next();
-  // })
-  //
-  // afterRouteEnter((context, next) => {
-  //   console.log("afterRouteEnter" + context.pathname)
-  //
-  //   next();
-  // })
+  const beforeRouteEnterCallback = beforeRouteEnter((context, next) => {
+    // console.log("BeforeRouteEnter " + context.pathname);
+
+    next();
+  });
+
+  const afterRouteEnterCallback = afterRouteEnter((context, next) => {
+    // console.log("afterRouteEnter " + context.pathname);
+
+    next();
+  });
+
+  onDestroy(beforeRouteEnterCallback);
+  onDestroy(afterRouteEnterCallback);
 </script>
 
 <h1>Welcome to Routve!</h1>

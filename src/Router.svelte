@@ -1,8 +1,31 @@
 <script context="module">
-  import {basePageInstance} from "./RouterStore";
+  import { basePageInstance } from "./RouterStore";
+
+  let beforeRouteEnterCallbacks = [];
+  let afterRouteEnterCallbacks = [];
 
   export function route(route) {
     basePageInstance(route);
+  }
+
+  export function beforeRouteEnter(callback) {
+    beforeRouteEnterCallbacks.push(callback);
+
+    return () => {
+      beforeRouteEnterCallbacks = beforeRouteEnterCallbacks.filter(
+        (item) => item !== callback
+      );
+    };
+  }
+
+  export function afterRouteEnter(callback) {
+    afterRouteEnterCallbacks.push(callback);
+
+    return () => {
+      afterRouteEnterCallbacks = afterRouteEnterCallbacks.filter(
+        (item) => item !== callback
+      );
+    };
   }
 </script>
 
@@ -15,10 +38,7 @@
 
   import DefaultChunkComponent from "./Chunk.svelte";
 
-  import {
-    path,
-    subRouterRoutesByBasePath,
-  } from "./RouterStore";
+  import { path, subRouterRoutesByBasePath } from "./RouterStore";
 
   export let routerConfig = Config;
   export let hidden = false;
@@ -38,14 +58,66 @@
 
   pageInstance.base(basePath);
 
-  function parseRoute(ctx, next) {
-    if (get(path) !== ctx.pathname) path.set(ctx.pathname);
+  function parseBeforeRouteEnter(context, next) {
+    if (get(path) !== context.pathname) path.set(context.pathname);
 
-    next();
+    if (beforeRouteEnterCallbacks.length > 0) {
+      let currentCallbackIndex = 0;
+
+      function invoke() {
+        const nextHandler = () => {
+          if (currentCallbackIndex === beforeRouteEnterCallbacks.length - 1) {
+            beforeRouteEnterCallbacks[currentCallbackIndex](context, () => {
+              next();
+            });
+          } else {
+            currentCallbackIndex++;
+
+            invoke();
+          }
+        };
+
+        if (currentCallbackIndex <= beforeRouteEnterCallbacks.length - 1) {
+          beforeRouteEnterCallbacks[currentCallbackIndex](context, nextHandler);
+        }
+      }
+
+      invoke();
+    } else {
+      next();
+    }
+  }
+
+  function parseAfterRouteEnter(context, next) {
+    if (afterRouteEnterCallbacks.length > 0) {
+      let currentCallbackIndex = 0;
+
+      function invoke() {
+        const nextHandler = () => {
+          if (currentCallbackIndex === afterRouteEnterCallbacks.length - 1) {
+            afterRouteEnterCallbacks[currentCallbackIndex](context, () => {
+              next();
+            });
+          } else {
+            currentCallbackIndex++;
+
+            invoke();
+          }
+        };
+
+        if (currentCallbackIndex <= afterRouteEnterCallbacks.length - 1) {
+          afterRouteEnterCallbacks[currentCallbackIndex](context, nextHandler);
+        }
+      }
+
+      invoke();
+    } else {
+      next();
+    }
   }
 
   if (!nestedRoute) {
-    pageInstance("*", parseRoute);
+    pageInstance("*", parseBeforeRouteEnter);
   }
 
   (function setupRouter(
@@ -64,7 +136,7 @@
           route.chunk || routerConfig.chunk || DefaultChunkComponent
         );
 
-      const handler = (context) => {
+      const handler = (context, next) => {
         if (route.children !== null && typeof route.children === "object") {
           subRouterRoutesByBasePath.update((value) => {
             value[basePath + path] = route.children;
@@ -114,6 +186,9 @@
             params,
           };
         else props = params;
+
+        if (!nestedRoute) parseAfterRouteEnter(context, next);
+        else next();
       };
 
       pageInstance(
@@ -131,6 +206,8 @@
         );
     });
   })(routes);
+
+  pageInstance("*", () => {});
 
   pageInstance.start();
 
