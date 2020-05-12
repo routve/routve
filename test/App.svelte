@@ -1,5 +1,5 @@
 <script>
-  import Router, { beforeRouteEnter, afterRouteEnter } from "../src/index";
+  import Router, { beforeRouteEnter, afterRouteEnter, getPath } from "../src/index";
   import RouterConfig from "./router.config";
   import { onDestroy } from "svelte";
 
@@ -12,7 +12,7 @@
   });
 
   const afterRouteEnterCallback = afterRouteEnter((context, next) => {
-    // console.log("afterRouteEnter " + context.pathname);
+    console.log("afterRouteEnter " + getPath());
 
     next();
   });

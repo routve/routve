@@ -1,5 +1,7 @@
 <script context="module">
   import { basePageInstance } from "./RouterStore";
+  import { get } from "svelte/store";
+  import { path } from "./RouterStore";
 
   let beforeRouteEnterCallbacks = [];
   let afterRouteEnterCallbacks = [];
@@ -27,18 +29,21 @@
       );
     };
   }
+
+  export function getPath() {
+    return get(path);
+  }
 </script>
 
 <script>
   import { onDestroy } from "svelte";
-  import { get } from "svelte/store";
   import page from "page";
   import Config from "./router.config";
   import ChunkGenerator from "./ChunkGenerator";
 
   import DefaultChunkComponent from "./Chunk.svelte";
 
-  import { path, subRouterRoutesByBasePath } from "./RouterStore";
+  import { subRouterRoutesByBasePath } from "./RouterStore";
 
   export let routerConfig = Config;
   export let hidden = false;
@@ -88,7 +93,7 @@
     }
   }
 
-  function parseAfterRouteEnter(context, next) {
+  function parseAfterRouteEnter(context) {
     if (afterRouteEnterCallbacks.length > 0) {
       let currentCallbackIndex = 0;
 
@@ -183,7 +188,7 @@
           };
         else props = params;
 
-        if (!nestedRoute) parseAfterRouteEnter(context, next);
+        if (!nestedRoute) parseAfterRouteEnter(context);
       };
 
       pageInstance(
