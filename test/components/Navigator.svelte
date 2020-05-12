@@ -14,4 +14,7 @@
 <a href="/nested-route-params-page/53">Example Nested Route With Page Params Test</a> <br>
 <!-- svelte-ignore a11y-invalid-attribute -->
 <a href="javascript:void(0);" on:click="{() => route('/programmatically-routed')}">The Page Programmatically Routed</a> <br>
+<a href="/test-multiple-same-instance">Multiple Instance Page: Default</a> <br>
+<a href="/test-multiple-same-instance/example">Multiple Instance Page: example</a> <br>
+<a href="/test-multiple-same-instance/omg">Multiple Instance Page: omg</a> <br>
 <a href="/error404">Test Error Page</a>

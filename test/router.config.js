@@ -4,6 +4,8 @@ import chunk from "./Chunk.svelte";
 import DefaultPage from "./pages/DefaultPage.svelte";
 import TestPage from "./pages/TestPage.svelte";
 
+const instancePage = ChunkGenerator(() => import("./pages/MultipleSameInstance/InstancePage.svelte"), chunk);
+
 export default {
   basePath: "",
   routes: {
@@ -38,6 +40,29 @@ export default {
         },
         "/:page": {
           component: () => import("./pages/NestedRouteParamsTest/ExampleParamPage.svelte")
+        }
+      }
+    },
+    "/test-multiple-same-instance": {
+      component: () => import("./pages/MultipleSameInstance.svelte"),
+      children: {
+        "": {
+          component: instancePage,
+          params: {
+            type: "default"
+          }
+        },
+        "/example": {
+          component: instancePage,
+          params: {
+            type: "example"
+          }
+        },
+        "/omg": {
+          component: () => import("./pages/MultipleSameInstance/InstancePage.svelte"),
+          params: {
+            type: "omg"
+          }
         }
       }
     },
