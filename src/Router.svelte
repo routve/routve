@@ -95,9 +95,7 @@
       function invoke() {
         const nextHandler = () => {
           if (currentCallbackIndex === afterRouteEnterCallbacks.length - 1) {
-            afterRouteEnterCallbacks[currentCallbackIndex](context, () => {
-              next();
-            });
+            afterRouteEnterCallbacks[currentCallbackIndex](context, () => {});
           } else {
             currentCallbackIndex++;
 
@@ -111,8 +109,6 @@
       }
 
       invoke();
-    } else {
-      next();
     }
   }
 
@@ -188,7 +184,6 @@
         else props = params;
 
         if (!nestedRoute) parseAfterRouteEnter(context, next);
-        else next();
       };
 
       pageInstance(
@@ -207,7 +202,7 @@
     });
   })(routes);
 
-  pageInstance("*", () => {});
+  if (!nestedRoute) pageInstance("*", () => {});
 
   pageInstance.start();
 
