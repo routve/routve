@@ -1,5 +1,5 @@
 <script>
-  import Router, { beforeRouteEnter, afterRouteEnter, getPath } from "../src/index";
+  import Router, { beforeRouteEnter, afterRouteEnter, getPath, path } from "../src/index";
   import RouterConfig from "./router.config";
   import { onDestroy } from "svelte";
 
@@ -12,7 +12,7 @@
   });
 
   const afterRouteEnterCallback = afterRouteEnter((context, next) => {
-    console.log("afterRouteEnter " + getPath());
+    // console.log("afterRouteEnter " + getPath());
 
     next();
   });
@@ -21,7 +21,7 @@
   onDestroy(afterRouteEnterCallback);
 </script>
 
-<h1>Welcome to Routve!</h1>
+<h1>Welcome to Routve! Current route: {$path}</h1>
 
 <br />
 

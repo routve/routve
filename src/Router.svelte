@@ -1,6 +1,6 @@
 <script context="module">
   import { basePageInstance } from "./RouterStore";
-  import { get } from "svelte/store";
+  import { get, readable } from "svelte/store";
   import { path } from "./RouterStore";
 
   let beforeRouteEnterCallbacks = [];
@@ -33,6 +33,17 @@
   export function getPath() {
     return get(path);
   }
+
+  export const pathReadable = readable(getPath(), set => {
+    const pathUnSubscriber = path.subscribe((value) => {
+      set(value);
+    })
+
+    return function stop() {
+      pathUnSubscriber();
+    };
+  });
+
 </script>
 
 <script>
