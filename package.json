@@ -28,7 +28,7 @@
     "svelte": "3.x"
   },
   "dependencies": {
-    "svelte-loadable": "^1.4.0",
+    "svelte-loadable": "^1.5.0",
     "page": "^1.11.6"
   },
   "devDependencies": {
