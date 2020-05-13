@@ -4,6 +4,8 @@ node_js:
 
 deploy:
   provider: npm
-  api_key: $NPM_API_KEY
+  email: "$NPM_EMAIL"
+  api_key: "$NPM_API_KEY"
+  skip_cleanup: true
   on:
     branch: master
