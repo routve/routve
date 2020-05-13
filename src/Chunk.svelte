@@ -1,6 +1,6 @@
 <script>
   import Loadable from "svelte-loadable";
-  import { isPageLoading, isComponentLoading } from "./RouterStore";
+  import { isPageLoading, isRouteLoading, isComponentLoading } from "./RouterStore";
 
   export let component;
   export let dynamicImport;
