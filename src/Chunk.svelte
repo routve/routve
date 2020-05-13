@@ -1,19 +1,28 @@
 <script>
   import Loadable from "svelte-loadable";
-  import { isPageLoading } from "./RouterStore";
+  import { isPageLoading, isComponentLoading } from "./RouterStore";
 
   export let component;
   export let dynamicImport;
   export let delay = 0;
   export let params = {};
+
+  function onLoad() {
+    isComponentLoading.set(true);
+  }
+
+  function onSuccess() {
+    isComponentLoading.set(false);
+
+    if (!isRouteLoading) isPageLoading.set(false);
+  }
 </script>
 
-<!--suppress JSUnusedAssignment, BadExpressionStatementJS, ES6UnusedImports -->
 <Loadable loader="{dynamicImport}" delay="delay">
-  <div slot="loading">{isPageLoading.set(true) ? '' : ''}</div>
+  <div slot="loading">{onLoad() ? '' : ''}</div>
 
   <div slot="success" let:component>
     <svelte:component this="{component}" {...params} />
-    {isPageLoading.set(false) ? '' : ''}
+    {onSuccess() ? '' : ''}
   </div>
 </Loadable>

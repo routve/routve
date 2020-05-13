@@ -1,7 +1,7 @@
 <script context="module">
   import { basePageInstance } from "./RouterStore";
   import { get, readable } from "svelte/store";
-  import { path } from "./RouterStore";
+  import { path, isPageLoading } from "./RouterStore";
 
   let beforeRouteEnterCallbacks = [];
   let afterRouteEnterCallbacks = [];
@@ -34,16 +34,25 @@
     return get(path);
   }
 
-  export const pathReadable = readable(getPath(), set => {
+  export const pathReadable = readable(getPath(), (set) => {
     const pathUnSubscriber = path.subscribe((value) => {
       set(value);
-    })
+    });
 
     return function stop() {
       pathUnSubscriber();
     };
   });
 
+  export const isPageLoadingReadable = readable(get(isPageLoading), (set) => {
+    const isPageLoadingUnSubscriber = isPageLoading.subscribe((value) => {
+      set(value);
+    });
+
+    return function stop() {
+      isPageLoadingUnSubscriber();
+    };
+  });
 </script>
 
 <script>
@@ -54,7 +63,11 @@
 
   import DefaultChunkComponent from "./Chunk.svelte";
 
-  import { subRouterRoutesByBasePath } from "./RouterStore";
+  import {
+    subRouterRoutesByBasePath,
+    isRouteLoading,
+    isComponentLoading,
+  } from "./RouterStore";
 
   export let routerConfig = Config;
   export let hidden = false;
@@ -75,6 +88,9 @@
   pageInstance.base(basePath);
 
   function parseBeforeRouteEnter(context, next) {
+    isPageLoading.set(true);
+    isRouteLoading.set(true);
+
     if (get(path) !== context.pathname) path.set(context.pathname);
 
     if (beforeRouteEnterCallbacks.length > 0) {
@@ -104,14 +120,26 @@
     }
   }
 
-  function parseAfterRouteEnter(context) {
+  function parseAfterRouteEnter(context, isCustomChunk) {
+    const componentLoaderHandler = () => {
+      isRouteLoading.set(false);
+
+      if (isCustomChunk) {
+        isPageLoading.set(false);
+      } else if (!get(isComponentLoading)) {
+        isPageLoading.set(false);
+      }
+    };
+
     if (afterRouteEnterCallbacks.length > 0) {
       let currentCallbackIndex = 0;
 
       function invoke() {
         const nextHandler = () => {
           if (currentCallbackIndex === afterRouteEnterCallbacks.length - 1) {
-            afterRouteEnterCallbacks[currentCallbackIndex](context, () => {});
+            afterRouteEnterCallbacks[currentCallbackIndex](context, () => {
+              componentLoaderHandler();
+            });
           } else {
             currentCallbackIndex++;
 
@@ -125,7 +153,7 @@
       }
 
       invoke();
-    }
+    } else componentLoaderHandler();
   }
 
   if (!nestedRoute) {
@@ -141,14 +169,18 @@
   ) {
     Object.keys(paths).forEach((path) => {
       const route = paths[path];
+      let isCustomChunk = false;
 
-      if (route.component.name === "component")
+      if (route.component.name === "component") {
+        isCustomChunk = route.chunk ? true : !!routerConfig.chunk;
+
         route.component = ChunkGenerator(
           route.component,
           route.chunk || routerConfig.chunk || DefaultChunkComponent
         );
+      }
 
-      const handler = (context, next) => {
+      const handler = (context) => {
         if (route.children !== null && typeof route.children === "object") {
           subRouterRoutesByBasePath.update((value) => {
             value[basePath + path] = route.children;
@@ -199,7 +231,7 @@
           };
         else props = params;
 
-        if (!nestedRoute) parseAfterRouteEnter(context);
+        if (!nestedRoute) parseAfterRouteEnter(context, isCustomChunk);
       };
 
       pageInstance(

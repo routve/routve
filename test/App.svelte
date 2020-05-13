@@ -1,5 +1,11 @@
 <script>
-  import Router, { beforeRouteEnter, afterRouteEnter, getPath, path } from "../src/index";
+  import Router, {
+    beforeRouteEnter,
+    afterRouteEnter,
+    // getPath,
+    path,
+    isPageLoading,
+  } from "../src/index";
   import RouterConfig from "./router.config";
   import { onDestroy } from "svelte";
 
@@ -17,8 +23,13 @@
     next();
   });
 
+  const isPageLoadingReadable = isPageLoading.subscribe((value) => {
+    // console.log(value);
+  });
+
   onDestroy(beforeRouteEnterCallback);
   onDestroy(afterRouteEnterCallback);
+  onDestroy(isPageLoadingReadable);
 </script>
 
 <h1>Welcome to Routve! Current route: {$path}</h1>
