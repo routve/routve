@@ -12,6 +12,14 @@
 
 ## Introduction
 
+`Routve` is an advanced non-official <a href="https://svelte.dev">Svelte 3</a> router like `vue-router`. Under the hood it uses <a href="https://github.com/visionmedia/page.js">`page.js`</a>. `Routve` supports these features for now:
+
+- Nested route/view mapping
+- Customizable router config per router
+- Route params, wildcards - thanks to `page.js`
+- HTML5 history mode - thanks to `page.js`
+- Navigation guards (by router events)
+
 ## Contributing
 
 Merge requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
