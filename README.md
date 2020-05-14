@@ -21,6 +21,11 @@
 - Navigation guards (by router events)
 - Chunks and dynamic component import
 
+## Install
+```bash
+npm install routve
+```
+
 ## Contributing
 
 Merge requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
