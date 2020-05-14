@@ -19,6 +19,7 @@
 - Route params, wildcards - thanks to `page.js`
 - HTML5 history mode - thanks to `page.js`
 - Navigation guards (by router events)
+- Chunks and dynamic component import
 
 ## Contributing
 
