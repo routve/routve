@@ -20,6 +20,7 @@
 - HTML5 history mode - thanks to `page.js`
 - Navigation guards (by router events)
 - Chunks and dynamic component import
+- Automatic links on `<a href="">` attribute - thanks to `page.js`
 
 ## Install
 ```bash
