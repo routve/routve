@@ -252,7 +252,13 @@
 
   if (!nestedRoute) pageInstance("*", () => {});
 
-  pageInstance.start();
+  if (nestedRoute)
+    pageInstance.start({
+      click: false,
+      popstate: false,
+      dispatch: false,
+    });
+  else pageInstance.start();
 
   if (nestedRoute) {
     const pathUnsubscribe = path.subscribe((value) => {
