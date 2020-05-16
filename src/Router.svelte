@@ -257,7 +257,7 @@
   if (nestedRoute) {
     const pathUnsubscribe = path.subscribe((value) => {
       if (value.startsWith(pageInstance.base())) {
-        pageInstance(value);
+        pageInstance.redirect(value);
       }
     });
 
