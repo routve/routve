@@ -22,7 +22,8 @@
   }
 </script>
 
-{component ? '' : ''} // suppress unused component export
+<!--suppress unused component export-->
+{component ? '' : ''}
 <Loadable loader="{dynamicImport}" delay="{delay}">
   <div slot="loading">{onLoad() ? '' : ''}</div>
 
