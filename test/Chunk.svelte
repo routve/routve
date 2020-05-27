@@ -7,13 +7,13 @@
   export let params = {};
 </script>
 
-<!--suppress JSUnusedAssignment, BadExpressionStatementJS, ES6UnusedImports -->
-<Loadable loader="{dynamicImport}" delay="delay">
+{component ? '' : ''} // suppress unused component export
+<Loadable loader="{dynamicImport}" delay="{delay}">
   <div slot="loading"></div>
 
   <div slot="success" let:component>
     <svelte:component this="{component}" {...params} />
-     <br>
+    <br />
     Test
   </div>
 </Loadable>

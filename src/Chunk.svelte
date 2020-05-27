@@ -1,6 +1,10 @@
 <script>
   import Loadable from "svelte-loadable";
-  import { isPageLoading, isRouteLoading, isComponentLoading } from "./RouterStore";
+  import {
+    isPageLoading,
+    isRouteLoading,
+    isComponentLoading,
+  } from "./RouterStore";
 
   export let component;
   export let dynamicImport;
@@ -18,7 +22,8 @@
   }
 </script>
 
-<Loadable loader="{dynamicImport}" delay="delay">
+{component ? '' : ''} // suppress unused component export
+<Loadable loader="{dynamicImport}" delay="{delay}">
   <div slot="loading">{onLoad() ? '' : ''}</div>
 
   <div slot="success" let:component>
