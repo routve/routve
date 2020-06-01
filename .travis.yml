@@ -8,6 +8,6 @@ script:
   - echo "skipping tests"
 deploy:
   provider: npm
-  email: ${NPM_EMAIL}
-  api_key: ${NPM_API_KEY}
+  email: $NPM_EMAIL
+  api_key: $NPM_TOKEN
   skip_cleanup: true
