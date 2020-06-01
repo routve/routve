@@ -4,6 +4,8 @@ node_js:
 branches:
   only:
     - master
+script:
+  - echo "skipping tests"
 deploy:
   provider: npm
   email: ${NPM_EMAIL}
