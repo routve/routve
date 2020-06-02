@@ -171,13 +171,21 @@
       const route = paths[path];
       let isCustomChunk = false;
 
-      if (route.component.name === "component") {
+      try {
+        route.component();
+      } catch (e) {
+        if (e.toString().includes("new")) route.staticComponent = true;
+      }
+
+      if (route.component.name === "component" && !route.staticComponent) {
         isCustomChunk = route.chunk ? true : !!routerConfig.chunk;
 
         route.component = ChunkGenerator(
           route.component,
           route.chunk || routerConfig.chunk || DefaultChunkComponent
         );
+
+        route.isCustomChunk = isCustomChunk;
       }
 
       const handler = (context) => {
@@ -221,15 +229,11 @@
 
         component = route.component;
 
-        if (
-          route.component.name === "component" ||
-          route.component.name === "SvelteComponentHook"
-        )
+        if (typeof route.component === "function" && !route.staticComponent) {
           props = {
-            component: route.component,
             params,
           };
-        else props = params;
+        } else props = params;
 
         if (!nestedRoute) parseAfterRouteEnter(context, isCustomChunk);
       };
