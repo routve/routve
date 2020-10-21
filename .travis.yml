@@ -1,7 +1,7 @@
 language: node_js
 node_js:
 - lts/*
-before_script:
+before_deploy:
   - git config --local user.name $GITHUB_USERNAME
   - git config --local user.email $GITHUB_EMAIL
   - chmod +x ./readVersion.sh
@@ -18,8 +18,8 @@ deploy:
       secure: YQvBAa0/WRhRUggddQQuGy5w88WhWk++VQ1lpaqyE3L2Z5jIiZa5I6u7t6IUah96q51eqyGDgTgzoC2UWm5Va5lQwqLPuiR5ZCUb+viuvBIBCD9sVRGhsYVDnOWslsYgdASKtyV3ca3SyFsj9KBkFNbcbcX/RR5oBnbxJimXTjmC6iFBEGhCsQMpUYFv4GB26rRpzVmg9Nm6tFS7pIE2+ogajoeVsmQoFIe82BdEcEY75qwjHTuderYuErbMyv1b9AzUsMGDiI8Hh/iWdap2q8ZfUqNFoIpnkuTk9UFwYSeHJpZSLq9yWuU76VgLwKHub+K3faGqwe5hAK+3tZIfyqg3pp2q2r5ytY5BLjPIalg8LlNr5uTKqhUZDH6uuRhOh06+sWAH9D6gT5hmFhr/6/zrqK/JwnRwPxy0mjmRCtieIivYlBbn9F4Xt/7DLeP1AnOmKPfbFRpmWAL5pkRvM4Fgq+upUB0QjlqQNBNwxQ+5zWbF72C4GZeSfVMQd78TVPcwtPkhJY7uP8o465EZVEeHAVgeXV9TDlx7YJw/9oiyfzkhtR8oiAPgILkw9Z30YrKvL78ZWsRt6kqj44IKUXZfhlQx5kpTX5+jt8DNbLf+86xmzhxIUWYfBe+11Fv6WrY0Zjy1EAPmhecZZ0mnjL9WlNbuO42Ja9SySTduL6U=
     on:
       repo: routve/routve
-    skip_cleanup: 'true'
+    cleanup: true
   - provider: npm
     email: $NPM_EMAIL
     api_key: $NPM_TOKEN
-    skip_cleanup: true
+    cleanup: true
