@@ -1,7 +1,7 @@
 language: node_js
 node_js:
 - lts/*
-before_deploy:
+before_script:
   - git config --local user.name $GITHUB_USERNAME
   - git config --local user.email $GITHUB_EMAIL
   - chmod +x ./readVersion.sh
