@@ -4,7 +4,8 @@ node_js:
 before_deploy:
   - git config --local user.name $GITHUB_USERNAME
   - git config --local user.email $GITHUB_EMAIL
-  - export TRAVIS_TAG=${"v" + ./readversion.sh}
+  - chmod +x ./readVersion.sh
+  - export TRAVIS_TAG=v`./readVersion.sh`
   - git tag $TRAVIS_TAG
 branches:
   only:
