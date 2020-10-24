@@ -1,12 +1,12 @@
 language: node_js
 node_js:
   - lts/*
-before_install:
+before_deploy:
   - git config --local user.name $GITHUB_USERNAME
   - git config --local user.email $GITHUB_EMAIL
   - chmod +x ./readVersion.sh
   - export TRAVIS_TAG=v`./readVersion.sh`
-  - git tag $TRAVIS_TAG
+  - git tag -f $TRAVIS_TAG
 branches:
   only:
     - master
