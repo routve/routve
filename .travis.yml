@@ -7,6 +7,10 @@ before_deploy:
   - chmod +x ./readVersion.sh
   - export TRAVIS_TAG=v`./readVersion.sh`
   - git tag -f $TRAVIS_TAG
+install:
+  - npm install -g yarn
+  - yarn
+  - yarn build
 script:
   - echo "skipping tests"
 deploy:
