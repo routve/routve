@@ -169,26 +169,28 @@
   ) {
     Object.keys(paths).forEach((path) => {
       const route = paths[path];
-      let isCustomChunk = false;
-
-      try {
-        route.component();
-      } catch (e) {
-        if (e.toString().includes("new")) route.staticComponent = true;
-      }
-
-      if (route.component.name === "component" && !route.staticComponent) {
-        isCustomChunk = route.chunk ? true : !!routerConfig.chunk;
-
-        route.component = ChunkGenerator(
-          route.component,
-          route.chunk || routerConfig.chunk || DefaultChunkComponent
-        );
-
-        route.isCustomChunk = isCustomChunk;
-      }
 
       const handler = (context) => {
+        let isCustomChunk = false;
+
+        try {
+          route.component();
+        } catch (e) {
+          console.log(e.toString())
+          if (e.toString().includes("new")) route.staticComponent = true;
+        }
+
+        if (route.component.name === "component" && !route.staticComponent) {
+          isCustomChunk = route.chunk ? true : !!routerConfig.chunk;
+
+          route.component = ChunkGenerator(
+            route.component,
+            route.chunk || routerConfig.chunk || DefaultChunkComponent
+          );
+
+          route.isCustomChunk = isCustomChunk;
+        }
+
         if (route.children !== null && typeof route.children === "object") {
           subRouterRoutesByBasePath.update((value) => {
             value[basePath + path] = route.children;
