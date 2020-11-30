@@ -23,6 +23,7 @@
 - Navigation guards (by router events)
 - Chunks and dynamic component import
 - Automatic links on `<a href="">` attribute - thanks to `page.js`
+- Query Strings (/some-route?example=123, /some-route?example, etc...) - thanks to `page.js`
 
 ## Install
 

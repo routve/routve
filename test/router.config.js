@@ -69,6 +69,9 @@ export default {
     "/programmatically-routed": {
       component: () => import("./pages/ProgrammaticallyRouted.svelte")
     },
+    "/query-string?test": {
+      component: () => import("./pages/QueryString.svelte")
+    },
     "*": {
       component: () => import("./pages/Error404.svelte"),
       chunk

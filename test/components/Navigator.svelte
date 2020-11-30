@@ -17,4 +17,5 @@
 <a href="/test-multiple-same-instance">Multiple Instance Page: Default</a> <br>
 <a href="/test-multiple-same-instance/example">Multiple Instance Page: example</a> <br>
 <a href="/test-multiple-same-instance/omg">Multiple Instance Page: omg</a> <br>
+<a href="/query-string?test=123">Query String Page</a> <br>
 <a href="/error404">Test Error Page</a>

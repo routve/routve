@@ -60,6 +60,7 @@
   import page from "page";
   import Config from "./router.config";
   import ChunkGenerator from "./ChunkGenerator";
+  import qs from "qs";
 
   import DefaultChunkComponent from "./Chunk.svelte";
 
@@ -92,7 +93,7 @@
     isRouteLoading.set(true);
     isComponentLoading.set(true);
 
-    if (get(path) !== context.pathname) path.set(context.pathname);
+    if (get(path) !== context.pathname) path.set(context.canonicalPath);
 
     if (beforeRouteEnterCallbacks.length > 0) {
       let currentCallbackIndex = 0;
@@ -168,8 +169,18 @@
     parentPath = "",
     parentComponent = null
   ) {
-    Object.keys(paths).forEach((path) => {
-      const route = paths[path];
+    Object.keys(paths).forEach((pathInPaths) => {
+      let path;
+
+      if (pathInPaths.includes("?")) {
+        const pathSplit = pathInPaths.split("?");
+
+        path = pathSplit[0];
+      } else {
+        path = pathInPaths;
+      }
+
+      const route = paths[pathInPaths];
 
       const handler = (context) => {
         let isCustomChunk = false;
@@ -177,7 +188,6 @@
         try {
           route.component();
         } catch (e) {
-          console.log(e.toString())
           if (e.toString().includes("new")) route.staticComponent = true;
         }
 
@@ -220,6 +230,15 @@
         ) {
           params.pageJsInstance = pageInstance;
         }
+
+        const queryString = qs.parse(context.querystring);
+
+        Object.keys(queryString).forEach((key) => {
+            path !== "*" &&
+            (pathInPaths.includes("?" + key) || pathInPaths.includes("&" + key))
+              ? (params[key] = queryString[key])
+              : null;
+        });
 
         Object.keys(context.params).forEach((key) =>
           key !== "0" &&
