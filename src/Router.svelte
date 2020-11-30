@@ -90,6 +90,7 @@
   function parseBeforeRouteEnter(context, next) {
     isPageLoading.set(true);
     isRouteLoading.set(true);
+    isComponentLoading.set(true);
 
     if (get(path) !== context.pathname) path.set(context.pathname);
 

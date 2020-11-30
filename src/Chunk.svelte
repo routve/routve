@@ -1,5 +1,7 @@
 <script>
   import Loadable from "svelte-loadable";
+  import { get } from "svelte/store";
+
   import {
     isPageLoading,
     isRouteLoading,
@@ -10,20 +12,14 @@
   export let delay = 0;
   export let params = {};
 
-  function onLoad() {
-    isComponentLoading.set(true);
-  }
-
   function onSuccess() {
     isComponentLoading.set(false);
 
-    if (!isRouteLoading) isPageLoading.set(false);
+    if (!get(isRouteLoading)) isPageLoading.set(false);
   }
 </script>
 
 <Loadable loader="{dynamicImport}" delay="{delay}">
-  <div slot="loading">{onLoad() ? '' : ''}</div>
-
   <div slot="success" let:component>
     <svelte:component this="{component}" {...params} />
     {onSuccess() ? '' : ''}
