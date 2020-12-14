@@ -89,36 +89,42 @@
   pageInstance.base(basePath);
 
   function parseBeforeRouteEnter(context, next) {
-    isPageLoading.set(true);
-    isRouteLoading.set(true);
-    isComponentLoading.set(true);
+    if (get(path) !== context.canonicalPath) {
+      isPageLoading.set(true);
+      isRouteLoading.set(true);
+      isComponentLoading.set(true);
 
-    if (get(path) !== context.pathname) path.set(context.canonicalPath);
+      path.set(context.canonicalPath);
 
-    if (beforeRouteEnterCallbacks.length > 0) {
-      let currentCallbackIndex = 0;
+      if (beforeRouteEnterCallbacks.length > 0) {
+        let currentCallbackIndex = 0;
 
-      function invoke() {
-        const nextHandler = () => {
-          if (currentCallbackIndex === beforeRouteEnterCallbacks.length - 1) {
-            beforeRouteEnterCallbacks[currentCallbackIndex](context, () => {
-              next();
-            });
-          } else {
-            currentCallbackIndex++;
+        function invoke() {
+          const nextHandler = () => {
+            if (currentCallbackIndex === beforeRouteEnterCallbacks.length - 1) {
+              beforeRouteEnterCallbacks[currentCallbackIndex](context, () => {
+                next();
+              });
+            } else {
+              currentCallbackIndex++;
 
-            invoke();
+              invoke();
+            }
+          };
+
+          if (currentCallbackIndex <= beforeRouteEnterCallbacks.length - 1) {
+            beforeRouteEnterCallbacks[currentCallbackIndex](
+              context,
+              nextHandler
+            );
           }
-        };
-
-        if (currentCallbackIndex <= beforeRouteEnterCallbacks.length - 1) {
-          beforeRouteEnterCallbacks[currentCallbackIndex](context, nextHandler);
         }
-      }
 
-      invoke();
+        invoke();
+      } else {
+        next();
+      }
     } else {
-      next();
     }
   }
 
@@ -191,13 +197,26 @@
           if (e.toString().includes("new")) route.staticComponent = true;
         }
 
-        if (route.component.name === "component" && !route.staticComponent) {
-          isCustomChunk = route.chunk ? true : !!routerConfig.chunk;
-
+        if (
+          typeof route.component !== "object" &&
+          typeof route.chunkGenerated === "undefined"
+        ) {
           route.component = ChunkGenerator(
             route.component,
             route.chunk || routerConfig.chunk || DefaultChunkComponent
-          );
+          ).chunk;
+
+          route.chunkGenerated = true;
+        }
+
+        if (typeof route.component === "object") {
+          route.component = route.component.chunk;
+
+          route.chunkGenerated = true;
+        }
+
+        if (route.component.name === "component" && !route.staticComponent) {
+          isCustomChunk = route.chunk ? true : !!routerConfig.chunk;
 
           route.isCustomChunk = isCustomChunk;
         }
@@ -234,10 +253,10 @@
         const queryString = qs.parse(context.querystring);
 
         Object.keys(queryString).forEach((key) => {
-            path !== "*" &&
-            (pathInPaths.includes("?" + key) || pathInPaths.includes("&" + key))
-              ? (params[key] = queryString[key])
-              : null;
+          path !== "*" &&
+          (pathInPaths.includes("?" + key) || pathInPaths.includes("&" + key))
+            ? (params[key] = queryString[key])
+            : null;
         });
 
         Object.keys(context.params).forEach((key) =>
