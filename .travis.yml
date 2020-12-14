@@ -7,6 +7,7 @@ before_deploy:
   - chmod +x ./readVersion.sh
   - export TRAVIS_TAG=v`./readVersion.sh`
   - git tag -f $TRAVIS_TAG
+  - npx semantic-release
 install:
   - npm install -g yarn
   - yarn
@@ -27,8 +28,6 @@ deploy:
       branch: dev
     skip_cleanup: true
     prerelease: "true"
-    script:
-      - npx semantic-release
   - provider: npm
     email: $NPM_EMAIL
     api_key: $NPM_TOKEN
