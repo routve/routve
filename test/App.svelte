@@ -41,4 +41,8 @@
 <br />
 <br />
 
-<Router routerConfig="{RouterConfig}" />
+{#if $isPageLoading}
+  Loading: {$isPageLoading}
+{/if}
+
+<Router routerConfig="{RouterConfig}" hidden="{$isPageLoading}" />
