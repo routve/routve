@@ -27,6 +27,8 @@ deploy:
       branch: dev
     skip_cleanup: true
     prerelease: "true"
+    script:
+      - npx semantic-release
   - provider: npm
     email: $NPM_EMAIL
     api_key: $NPM_TOKEN
