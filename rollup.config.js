@@ -19,7 +19,9 @@ const watch = {
 const plugins = [
   svelte({
     // enable run-time checks when not in production
-    dev: !production,
+    compilerOptions: {
+      dev: !production,
+    },
   }),
 
   // If you have external dependencies installed from
