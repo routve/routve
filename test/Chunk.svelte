@@ -7,7 +7,7 @@
     isPageLoading,
     isRouteLoading,
     isComponentLoading,
-  } from "./RouterStore";
+  } from "../src/RouterStore";
 
   export let component;
   export let delay = 0;
