@@ -7,7 +7,29 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "start": "sirv public -s -H 0.0.0.0"
+    "start": "sirv public -s -H 0.0.0.0",
+    "bump-version": "rjp package.json version $VERSION",
+    "semantic-release": "semantic-release",
+    "lint": "npm-run-all -c lint:*",
+    "lint:prettier": "prettier -c '**/*.{js,ts,json,svelte,md,css}' --config .prettierrc",
+    "format": "npm-run-all -c format:*",
+    "format:prettier": "prettier --write '**/*.{js,ts,svelte,json,md,css}' --config .prettierrc"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "@commitlint/prompt"
+    }
   },
   "repository": {
     "type": "git",
@@ -44,6 +66,18 @@
     "rollup-plugin-svelte": "^6.1.1",
     "rollup-plugin-terser": "^7.0.2",
     "sirv-cli": "^1.0.8",
-    "svelte": "^3.22.2"
+    "svelte": "^3.22.2",
+    "commitizen": "^4.2.2",
+    "husky": "^4.3.6",
+    "lint-staged": "^10.5.3",
+    "replace-json-property": "^1.6.3",
+    "semantic-release": "^17.3.0",
+    "npm-run-all": "^4.1.5",
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/exec": "^5.0.0",
+    "@semantic-release/git": "^9.0.0",
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "@commitlint/prompt": "^11.0.0"
   }
 }

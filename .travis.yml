@@ -1,36 +1,15 @@
 language: node_js
 node_js:
   - lts/*
-before_deploy:
-  - git config --local user.name $GITHUB_USERNAME
-  - git config --local user.email $GITHUB_EMAIL
-  - chmod +x ./readVersion.sh
-  - export TRAVIS_TAG=v`./readVersion.sh`
-  - git tag -f $TRAVIS_TAG
-  - npx semantic-release
-install:
-  - npm install -g yarn
-  - yarn
-  - yarn build
-script:
-  - echo "skipping tests"
-deploy:
-  - provider: releases
-    api_key: $GITHUB_API_KEY
-    on:
-      repo: routve/routve
-      branch: master
-    skip_cleanup: true
-  - provider: releases
-    api_key: $GITHUB_API_KEY
-    on:
-      repo: routve/routve
-      branch: dev
-    skip_cleanup: true
-    prerelease: "true"
-  - provider: npm
-    email: $NPM_EMAIL
-    api_key: $NPM_TOKEN
-    skip_cleanup: true
-    on:
-      branch: master
+
+jobs:
+  include:
+    - stage: install
+      script:
+        - yarn
+      skip_cleanup: true
+    - stage: Build & publish
+      script:
+        - yarn build
+        - yarn semantic-release
+      if: branch = master
