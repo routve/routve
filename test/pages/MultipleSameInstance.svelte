@@ -2,6 +2,7 @@
   import Router from "../../src/index";
 </script>
 
-Multiple same instance page <br>
+Multiple same instance page
+<br />
 
 <Router basePath="/test-multiple-same-instance" />

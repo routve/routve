@@ -18,4 +18,5 @@
 <br />
 {type}
 <br />
-Count: {$instanceCount}
+Count:
+{$instanceCount}

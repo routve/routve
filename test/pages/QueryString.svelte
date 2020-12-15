@@ -1,6 +1,8 @@
 <script>
   export let test = null;
 
-  $: testAbc = test
+  $: testAbc = test;
 </script>
-Query String page query: test = {testAbc}
+
+Query String page query: test =
+{testAbc}

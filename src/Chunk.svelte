@@ -34,8 +34,8 @@
   });
 
   $: {
-    component
-    params
+    component;
+    params;
 
     if (onMounted) setPageLoaded();
   }

@@ -6,11 +6,18 @@ import {
   getPath,
   isPageLoadingReadable as isPageLoading,
   pathReadable as path,
-  route
+  route,
 } from "./Router.svelte";
 import ChunkGenerator from "./ChunkGenerator";
 
 export { ChunkGenerator };
-export { route, beforeRouteEnter, afterRouteEnter, getPath, path, isPageLoading };
+export {
+  route,
+  beforeRouteEnter,
+  afterRouteEnter,
+  getPath,
+  path,
+  isPageLoading,
+};
 
 export default Router;

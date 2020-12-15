@@ -2,6 +2,7 @@
   import Router from "../../src/index";
 </script>
 
-Nested Routing example page <br>
+Nested Routing example page
+<br />
 
 <Router basePath="/nested-route-page" />

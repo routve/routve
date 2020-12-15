@@ -34,8 +34,8 @@
   });
 
   $: {
-    component
-    params
+    component;
+    params;
 
     if (onMounted) setPageLoaded();
   }
@@ -47,7 +47,7 @@
   <Loadable loader="{component}" delay="{delay}">
     <div slot="success" let:component>
       <svelte:component this="{component}" {...params} />
-      <br>
+      <br />
       Test chunk
     </div>
   </Loadable>
