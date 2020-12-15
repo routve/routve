@@ -16,12 +16,6 @@
   let isStatic = false;
   let onMounted = false;
 
-  try {
-    component();
-  } catch (e) {
-    if (e.toString().includes("new")) isStatic = true;
-  }
-
   function setPageLoaded() {
     isComponentLoading.set(false);
 
@@ -29,15 +23,20 @@
   }
 
   onMount(() => {
-    setPageLoaded();
+    if (isStatic) setPageLoaded();
     onMounted = true;
   });
 
   $: {
-    component;
+    try {
+      component();
+    } catch (e) {
+      isStatic = e.toString().includes("new");
+    }
+
     params;
 
-    if (onMounted) setPageLoaded();
+    if (isStatic && onMounted) setPageLoaded();
   }
 </script>
 
@@ -47,6 +46,7 @@
   <Loadable loader="{component}" delay="{delay}">
     <div slot="success" let:component>
       <svelte:component this="{component}" {...params} />
+      {setPageLoaded() ? '' : ''}
       <br />
       Test chunk
     </div>
