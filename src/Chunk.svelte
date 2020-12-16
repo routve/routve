@@ -3,6 +3,8 @@
   import { get } from "svelte/store";
   import { onMount } from "svelte";
 
+  import { isClass } from "./util";
+
   import {
     isPageLoading,
     isRouteLoading,
@@ -33,11 +35,7 @@
     onMounted = true;
   });
 
-  $: try {
-    component();
-  } catch (e) {
-    isStatic = e.toString().includes("new");
-  }
+  $: isStatic = isClass(component);
 
   $: {
     component;
