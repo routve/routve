@@ -198,7 +198,7 @@
         }
 
         if (
-          typeof route.component !== "object" &&
+          typeof route.component.chunk === "undefined" &&
           typeof route.chunkGenerated === "undefined"
         ) {
           route.component = ChunkGenerator(
@@ -209,7 +209,7 @@
           route.chunkGenerated = true;
         }
 
-        if (typeof route.component === "object") {
+        if (typeof route.component.chunk !== "undefined") {
           route.component = route.component.chunk;
 
           route.chunkGenerated = true;
