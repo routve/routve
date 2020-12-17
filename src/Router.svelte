@@ -66,22 +66,24 @@
 
   import { isRouteLoading, isComponentLoading } from "./RouterStore";
 
-  export let routerConfig = Config;
-  export let hidden = false;
-
   let props = {};
   let component = null;
-  let subRoutes = null;
-  let subBasePath = null;
+  let subRouterContext = null;
 
-  const nestedRoute = typeof getContext("route") !== "undefined";
+  export let routerConfig = Config;
+
+  const routerContext = getContext("routve.context");
+  const nestedRoute =
+    routerConfig === Config && typeof routerContext !== "undefined";
+
   export let pageInstance = nestedRoute ? page.create() : basePageInstance;
-
-  export let routes = nestedRoute ? getContext("route") : routerConfig.routes;
-
+  export let routes = nestedRoute
+    ? routerContext.subRoutes
+    : routerConfig.routes;
   export let basePath = nestedRoute
-    ? getContext("basePath")
+    ? routerContext.basePath + routerContext.parentPath
     : routerConfig.basePath || "";
+  export let hidden = false;
 
   pageInstance.base(basePath);
 
@@ -203,10 +205,14 @@
         }
 
         if (route.children !== null && typeof route.children === "object") {
-          subBasePath = basePath + path;
-          subRoutes = route.children;
+          subRouterContext = {
+            basePath,
+            parentPath: path,
+            subRoutes: route.children,
+            parentContext: routerContext,
+          };
         } else {
-          subRoutes = null;
+          subRouterContext = null;
         }
 
         let params = {};
@@ -301,7 +307,6 @@
   <svelte:component
     this="{component}"
     {...props}
-    subRoutes="{subRoutes}"
-    subBasePath="{subBasePath}"
+    subRouterContext="{subRouterContext}"
   />
 </div>

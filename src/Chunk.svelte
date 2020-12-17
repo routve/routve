@@ -14,8 +14,7 @@
   export let component;
   export let delay = 0;
   export let params = {};
-  export let subRoutes = null;
-  export let subBasePath = null;
+  export let subRouterContext = null;
 
   let isStatic = false;
   let onMounted = false;
@@ -48,10 +47,8 @@
   $: isPromise = component instanceof Promise;
   $: isStatic = isClass(component);
   $: {
-    if (typeof subRoutes !== "undefined") setContext("route", subRoutes);
-  }
-  $: {
-    if (typeof subBasePath !== "undefined") setContext("basePath", subBasePath);
+    if (typeof subRouterContext !== "undefined")
+      setContext("routve.context", subRouterContext);
   }
 
   $: {
