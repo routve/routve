@@ -56,7 +56,7 @@
 </script>
 
 <script>
-  import { onDestroy } from "svelte";
+  import { onDestroy, getContext } from "svelte";
   import page from "page";
   import Config from "./router.config";
   import ChunkGenerator from "./ChunkGenerator";
@@ -64,27 +64,24 @@
 
   import DefaultChunkComponent from "./Chunk.svelte";
 
-  import {
-    subRouterRoutesByBasePath,
-    isRouteLoading,
-    isComponentLoading,
-  } from "./RouterStore";
+  import { isRouteLoading, isComponentLoading } from "./RouterStore";
 
   export let routerConfig = Config;
   export let hidden = false;
 
   let props = {};
   let component = null;
+  let subRoutes = null;
+  let subBasePath = null;
 
-  const mainBasePath = routerConfig.basePath || "";
-  export let basePath = mainBasePath;
-
-  const nestedRoute = basePath !== mainBasePath;
+  const nestedRoute = typeof getContext("route") !== "undefined";
   export let pageInstance = nestedRoute ? page.create() : basePageInstance;
 
-  export let routes = nestedRoute
-    ? $subRouterRoutesByBasePath[basePath]
-    : routerConfig.routes;
+  export let routes = nestedRoute ? getContext("route") : routerConfig.routes;
+
+  export let basePath = nestedRoute
+    ? getContext("basePath")
+    : routerConfig.basePath || "";
 
   pageInstance.base(basePath);
 
@@ -222,10 +219,10 @@
         }
 
         if (route.children !== null && typeof route.children === "object") {
-          subRouterRoutesByBasePath.update((value) => {
-            value[basePath + path] = route.children;
-            return value;
-          });
+          subBasePath = basePath + path;
+          subRoutes = route.children;
+        } else {
+          subRoutes = null;
         }
 
         let params = {};
@@ -313,22 +310,16 @@
     });
 
     onDestroy(pathUnsubscribe);
-    onDestroy(() =>
-      subRouterRoutesByBasePath.update((list) => {
-        const newList = [];
-
-        Object.keys(list)
-          .filter((key) => key !== pageInstance.base())
-          .forEach((key) => (newList[key] = list[key]));
-
-        return newList;
-      })
-    );
   }
 
   onDestroy(() => pageInstance.stop());
 </script>
 
 <div hidden="{hidden}">
-  <svelte:component this="{component}" {...props} />
+  <svelte:component
+    this="{component}"
+    {...props}
+    subRoutes="{subRoutes}"
+    subBasePath="{subBasePath}"
+  />
 </div>

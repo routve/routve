@@ -1,7 +1,7 @@
 <script>
   import Loadable from "svelte-loadable";
   import { get } from "svelte/store";
-  import { onMount } from "svelte";
+  import { onMount, setContext } from "svelte";
 
   import { isClass } from "./util";
 
@@ -14,6 +14,8 @@
   export let component;
   export let delay = 0;
   export let params = {};
+  export let subRoutes = null;
+  export let subBasePath = null;
 
   let isStatic = false;
   let onMounted = false;
@@ -45,6 +47,12 @@
 
   $: isPromise = component instanceof Promise;
   $: isStatic = isClass(component);
+  $: {
+    if (typeof subRoutes !== "undefined") setContext("route", subRoutes);
+  }
+  $: {
+    if (typeof subBasePath !== "undefined") setContext("basePath", subBasePath);
+  }
 
   $: {
     component;
