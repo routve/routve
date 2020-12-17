@@ -10,6 +10,7 @@ const instancePage = ChunkGenerator(
 
 export default {
   basePath: "",
+  hashbang: false,
   routes: {
     "/": {
       component: DefaultPage,

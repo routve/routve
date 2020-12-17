@@ -1,7 +1,8 @@
 <script context="module">
   import { basePageInstance } from "./RouterStore";
-  import { get, readable } from "svelte/store";
+  import { get, readable, writable } from "svelte/store";
   import { path, isPageLoading } from "./RouterStore";
+  const pathName = writable("");
 
   let beforeRouteEnterCallbacks = [];
   let afterRouteEnterCallbacks = [];
@@ -76,16 +77,23 @@
   const nestedRoute =
     routerConfig === Config && typeof routerContext !== "undefined";
 
+  export let hashbang = nestedRoute
+    ? routerContext.hashbang
+    : !!routerConfig.hashbang
+    ? routerConfig.hashbang
+    : false;
   export let pageInstance = nestedRoute ? page.create() : basePageInstance;
   export let routes = nestedRoute
     ? routerContext.subRoutes
     : routerConfig.routes;
   export let basePath = nestedRoute
-    ? routerContext.basePath + routerContext.parentPath
+    ? routerContext.basePath + (hashbang ? "#!" : "") + routerContext.parentPath
     : routerConfig.basePath || "";
   export let hidden = false;
 
   pageInstance.base(basePath);
+
+  if (!hashbang) isPageLoading.set(true);
 
   function parseBeforeRouteEnter(context, next) {
     if (get(path) !== context.canonicalPath) {
@@ -94,6 +102,7 @@
       isComponentLoading.set(true);
 
       path.set(context.canonicalPath);
+      pathName.set(context.pathname);
 
       if (beforeRouteEnterCallbacks.length > 0) {
         let currentCallbackIndex = 0;
@@ -210,6 +219,7 @@
             parentPath: path,
             subRoutes: route.children,
             parentContext: routerContext,
+            hashbang,
           };
         } else {
           subRouterContext = null;
@@ -287,13 +297,27 @@
       click: false,
       popstate: false,
       dispatch: false,
+      hashbang,
     });
-  else pageInstance.start();
+  else pageInstance.start({ hashbang });
 
   if (nestedRoute) {
     const pathUnsubscribe = path.subscribe((value) => {
-      if (value.startsWith(pageInstance.base())) {
-        pageInstance.show(value, false, true, false);
+      if (
+        value.startsWith(pageInstance.base()) ||
+        (hashbang &&
+          value.startsWith(routerContext.basePath + routerContext.parentPath))
+      ) {
+        if (hashbang) {
+          if (!value.startsWith(pageInstance.base()))
+            value =
+              routerContext.basePath +
+              value.split(routerContext.basePath)[0] +
+              "#!" +
+              value.split(routerContext.basePath)[1];
+
+          pageInstance.show(value, false, true, false);
+        } else pageInstance.show(value);
       }
     });
 
@@ -302,6 +326,12 @@
 
   onDestroy(() => pageInstance.stop());
 </script>
+
+<svelte:head>
+  {#if hashbang && !nestedRoute}
+    <base href="{basePath + '/'}" />
+  {/if}
+</svelte:head>
 
 <div hidden="{hidden}">
   <svelte:component
