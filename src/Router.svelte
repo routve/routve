@@ -2,7 +2,6 @@
   import { basePageInstance } from "./RouterStore";
   import { get, readable, writable } from "svelte/store";
   import { path, isPageLoading } from "./RouterStore";
-  const pathName = writable("");
 
   let beforeRouteEnterCallbacks = [];
   let afterRouteEnterCallbacks = [];
@@ -102,7 +101,6 @@
       isComponentLoading.set(true);
 
       path.set(context.canonicalPath);
-      pathName.set(context.pathname);
 
       if (beforeRouteEnterCallbacks.length > 0) {
         let currentCallbackIndex = 0;
