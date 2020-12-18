@@ -1,4 +1,4 @@
-import { ChunkGenerator } from "../src/index";
+import { ChunkGenerator } from "../../../src";
 import chunk from "./Chunk.svelte";
 
 import DefaultPage from "./pages/DefaultPage.svelte";

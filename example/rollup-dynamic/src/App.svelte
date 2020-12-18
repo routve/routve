@@ -5,7 +5,7 @@
     // getPath,
     path,
     isPageLoading,
-  } from "../src/index";
+  } from "../../../src";
   import RouterConfig from "./router.config";
   import { onDestroy } from "svelte";
 

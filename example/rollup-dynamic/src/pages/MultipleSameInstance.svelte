@@ -1,5 +1,5 @@
 <script>
-  import Router from "../../src/index";
+  import Router from "../../../../src";
 </script>
 
 Multiple same instance page

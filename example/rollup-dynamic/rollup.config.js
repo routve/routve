@@ -10,7 +10,7 @@ rmdir("public/assets", function (error) {});
 
 const production = !process.env.ROLLUP_WATCH;
 
-const input = ["test/main.js"];
+const input = ["src/main.js"];
 
 const watch = {
   clearScreen: false,
