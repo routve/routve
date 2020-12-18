@@ -12,9 +12,21 @@
 
 ---
 
-## Introduction
+# About
 
-`Routve` is an advanced non-official <a href="https://svelte.dev">Svelte 3</a> router like `vue-router`. Under the hood it uses <a href="https://github.com/visionmedia/page.js">page.js</a>. `Routve` supports these features for now:
+#### Introduction:
+
+Routve is an advanced non-official <a href="https://svelte.dev">Svelte 3</a> router like `vue-router`. Under the hood it uses <a href="https://github.com/visionmedia/page.js">page.js</a>.
+
+#### Why Routve?
+
+Alright there are so many router libraries and components for Svelte. So why would you use Routve? Simply, Routve is always updated, maintained, stable and advanced. It has already used in production, and some development projects. Routve supports advanced and complex features such as route managing, navigation guards, page load handling, automatic links, hashbang, nested routing, and most importantly code splitting (aka. dynamic component import).
+
+When we first created Routve, there was no properly enough advanced router library which especially supports code splitting and nested routing. We believed we can create <strong>only one truly advanced enough router library</strong>. Now, we are introducing you: <strong>Routve</strong> with further features.
+
+#### Features:
+
+Routve supports these features for now:
 
 - Nested route/view mapping
 - Customizable router config per router
@@ -25,13 +37,13 @@
 - Automatic links on `<a href="">` attribute - thanks to `page.js`
 - Query Strings (/some-route?example=123, /some-route?example, etc...) - thanks to `page.js`
 
-## Install
+# Install
 
 ```bash
 npm install routve
 ```
 
-## Development
+# Development
 
 Always use <a href="https://yarnpkg.com/">yarn</a> to avoid conflicting .lock file issues.
 
@@ -47,10 +59,10 @@ Secondly, run which example would you like to run: (`yarn dev:<example>` see `ya
 yarn dev
 ```
 
-## Contributing
+# Contributing
 
 Merge requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-## License
+# License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
