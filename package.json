@@ -1,6 +1,6 @@
 {
   "name": "routve",
-  "version": "1.1.18",
+  "version": "2.0.0",
   "description": "Routve is an advanced Svelte 3 router.",
   "main": "src/index.js",
   "svelte": "src/index.js",
