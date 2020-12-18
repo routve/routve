@@ -22,7 +22,7 @@ Routve is an advanced non-official <a href="https://svelte.dev">Svelte 3</a> rou
 
 Alright there are so many router libraries and components for Svelte. So why would you use Routve? Simply, Routve is always updated, maintained, stable and advanced. It has already used in production, and some development projects. Routve supports advanced and complex features such as route managing, navigation guards, page load handling, automatic links, hashbang, nested routing, and most importantly code splitting (aka. dynamic component import).
 
-When we first created Routve, there was no properly enough advanced router library which especially supports code splitting and nested routing. We believed we can create <strong>only one truly advanced enough router library</strong>. Now, we are introducing you: <strong>Routve</strong> with further features.
+When we first created Routve, there was no properly enough advanced router library which especially supports code splitting and nested routing. We believed we can create <strong>only one truly advanced enough router library</strong> for Svelte. Now, we are introducing you: <strong>Routve</strong> with further features.
 
 #### Features:
 
