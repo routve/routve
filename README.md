@@ -20,7 +20,9 @@ Routve is an advanced non-official <a href="https://svelte.dev">Svelte 3</a> rou
 
 #### Why Routve?
 
-Alright there are so many router libraries and components for Svelte. So why would you use Routve? Simply, Routve is always updated, maintained, stable and advanced. It has already used in production, and some development projects. Routve supports advanced and complex features such as route managing, navigation guards, page load handling, automatic links, hashbang, nested routing, and most importantly code splitting (aka. dynamic component import).
+Alright there are so many router libraries and components for Svelte. So why would you use Routve?
+
+Simply, Routve is super simple - easy to use, always up-to-date, maintained, stable and advanced. It has already used in production, and some development projects. Routve supports advanced and complex features such as route managing, navigation guards, page load handling, automatic links, hashbang, nested routing, and most importantly code splitting (aka. dynamic component import).
 
 When we first created Routve, there was no properly enough advanced router library which especially supports code splitting and nested routing. We believed we can create <strong>only one truly advanced enough router library</strong> for Svelte. Now, we are introducing you: <strong>Routve</strong> with further features.
 
@@ -28,14 +30,31 @@ When we first created Routve, there was no properly enough advanced router libra
 
 Routve supports these features for now:
 
-- Nested route/view mapping
-- Customizable router config per router
-- Route params, wildcards - thanks to `page.js`
-- HTML5 history mode - thanks to `page.js`
-- Navigation guards (by router events)
-- Chunks and dynamic component import
-- Automatic links on `<a href="">` attribute - thanks to `page.js`
-- Query Strings (/some-route?example=123, /some-route?example, etc...) - thanks to `page.js`
+- <strong>Very tiny</strong> ~ only few light dependencies
+- <strong>Path routing</strong> (aka. URI) ~ like `/login` `/register`, without hash - ideal for SPA and SSR - `default`
+- <strong>Hashbang</strong> ~ like `index.html#!/login` `index.html#!/register`, ideal for static SPA
+- <strong>Nested routing</strong> ~ add children routes/pages and just add router like `<Router>`
+- <strong>Base path</strong> ~ you can define base path like; `/panel` then routing is gonna be like `/panel/login`
+- <strong>Customizable config per router</strong> ~ customize your each router component
+- <strong>Automatic links on `<a href="">` attribute</strong> ~ thanks to `page.js` (no more need for extra component import, for example: `<Link>`)
+- <strong>Regex support</strong> ~ thanks to `page.js`
+- <strong>Router events</strong> ~ such as `beforeEnterRoute`, `afterRouteEnter` - useful for navigation guards
+- <strong>isPageLoading event</strong> ~ a boolean reactive variable - which allows you to determine is the page still loading?
+- <strong>Custom chunk support</strong> ~ Routve uses chunk component for each route to ensure stable, safe and providing additional advanced features - you can either give by each route or generally to all routes
+- <strong>Import component as you want</strong> ~ Routve supports many component import styles! - such as `() => import("/TestPage.svelte")` (aka. dynamic importing, lazy loading), `import("/TestPage.svelte")` static promise importing or `component: TestPageComponent` static/preloaded component passing
+- <strong>Named params</strong> ~ give your route which param would you like to, such as `pageType: "trash"`
+- <strong>Route params</strong> ~ get param by the path, for example; `/post/:postID` - `postID` is now our route param, Routve will add this param to page component (`export let postID;`)
+- <strong>Wildcards</strong> ~ thanks to `page.js`
+- <strong>Query strings</strong> ~ query strings like; `/some-route?example=123` - thanks to `page.js`
+- <strong>HTML5 history mode</strong> ~ which is typically `path routing`, ideal for SPA and SSR - thanks to `page.js`
+- <strong>Error 404 handling</strong> ~ Routve can handle all 404 error page requests if there is no matching route and if `*` is given as path
+- <strong>Programmatic navigation</strong> ~ just import `route` method and call it `route("/login")`
+
+#### There are also upcoming features:
+
+- <strong>`Route names`</strong>
+- <strong>`SSR support`</strong>
+- <strong>`Sapper support`</strong>
 
 # Install
 
