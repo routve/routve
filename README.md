@@ -14,7 +14,7 @@
 
 ## Introduction
 
-`Routve` is an advanced non-official <a href="https://svelte.dev">Svelte 3</a> router like `vue-router`. Under the hood it uses <a href="https://github.com/visionmedia/page.js">`page.js`</a>. `Routve` supports these features for now:
+`Routve` is an advanced non-official <a href="https://svelte.dev">Svelte 3</a> router like `vue-router`. Under the hood it uses <a href="https://github.com/visionmedia/page.js">page.js</a>. `Routve` supports these features for now:
 
 - Nested route/view mapping
 - Customizable router config per router
@@ -29,6 +29,22 @@
 
 ```bash
 npm install routve
+```
+
+## Development
+
+Always use <a href="https://yarnpkg.com/">yarn</a> to avoid conflicting .lock file issues.
+
+Firstly, install all packages with `yarn`:
+
+```bash
+yarn
+```
+
+Secondly, run which example would you like to run: (`yarn dev:<example>` see `yarn run` or [`package.json`](package.json) #scripts)
+
+```bash
+yarn dev
 ```
 
 ## Contributing
