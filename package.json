@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "page": "^1.11.6",
-    "svelte-loadable": "^1.5.0",
+    "svelte-loadable": "^1.5.1",
     "qs": "^6.9.4"
   },
   "devDependencies": {
