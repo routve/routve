@@ -1,5 +1,5 @@
 <script>
-  import Router, { route } from "../../src/index";
+  import { route } from "../../src/index";
 </script>
 
 <h3>Navigator</h3>

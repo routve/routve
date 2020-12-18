@@ -1,7 +1,9 @@
 <script>
   import Loadable from "svelte-loadable";
   import { get } from "svelte/store";
-  import { onMount } from "svelte";
+  import { onMount, setContext } from "svelte";
+
+  import { isClass } from "./util";
 
   import {
     isPageLoading,
@@ -12,10 +14,14 @@
   export let component;
   export let delay = 0;
   export let params = {};
+  export let subRouterContext = null;
 
   let isStatic = false;
   let onMounted = false;
   let isLoadableLoaded = false;
+  let isPromiseLoaded = false;
+
+  let isPromise;
 
   function setPageLoaded() {
     isComponentLoading.set(false);
@@ -28,27 +34,42 @@
     isLoadableLoaded = true;
   }
 
+  function setPromiseLoaded() {
+    setPageLoaded();
+    isPromiseLoaded = true;
+  }
+
   onMount(() => {
     if (isStatic) setPageLoaded();
     onMounted = true;
   });
 
-  $: try {
-    component();
-  } catch (e) {
-    isStatic = e.toString().includes("new");
+  $: isPromise = component instanceof Promise;
+  $: isStatic = isClass(component);
+  $: {
+    if (typeof subRouterContext !== "undefined")
+      setContext("routve.context", subRouterContext);
   }
 
   $: {
     component;
     params;
 
-    if ((isStatic && onMounted) || (!isStatic && isLoadableLoaded))
+    if (
+      (isPromise && isPromiseLoaded) ||
+      (isStatic && onMounted) ||
+      (!isStatic && !isPromise && isLoadableLoaded)
+    )
       setPageLoaded();
   }
 </script>
 
-{#if isStatic}
+{#if isPromise}
+  {#await component.then(({ default: C }) => C) then component}
+    <svelte:component this="{component}" {...params} />
+    {setPromiseLoaded() ? '' : ''}
+  {/await}
+{:else if isStatic}
   <svelte:component this="{component}" {...params} />
 {:else}
   <Loadable loader="{component}" delay="{delay}">

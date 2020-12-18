@@ -1,6 +1,6 @@
 <script context="module">
   import { basePageInstance } from "./RouterStore";
-  import { get, readable } from "svelte/store";
+  import { get, readable, writable } from "svelte/store";
   import { path, isPageLoading } from "./RouterStore";
 
   let beforeRouteEnterCallbacks = [];
@@ -56,37 +56,41 @@
 </script>
 
 <script>
-  import { onDestroy } from "svelte";
+  import { onDestroy, getContext } from "svelte";
   import page from "page";
-  import Config from "./router.config";
+  import RouterConfig from "./router.config";
   import ChunkGenerator from "./ChunkGenerator";
   import qs from "qs";
 
   import DefaultChunkComponent from "./Chunk.svelte";
 
-  import {
-    subRouterRoutesByBasePath,
-    isRouteLoading,
-    isComponentLoading,
-  } from "./RouterStore";
-
-  export let routerConfig = Config;
-  export let hidden = false;
+  import { isRouteLoading, isComponentLoading } from "./RouterStore";
 
   let props = {};
   let component = null;
+  let subRouterContext = null;
 
-  const mainBasePath = routerConfig.basePath || "";
-  export let basePath = mainBasePath;
+  export let config = RouterConfig;
 
-  const nestedRoute = basePath !== mainBasePath;
+  const routerContext = getContext("routve.context");
+  const nestedRoute =
+    config === RouterConfig && typeof routerContext !== "undefined";
+
+  export let hashbang = nestedRoute
+    ? routerContext.hashbang
+    : !!config.hashbang
+    ? config.hashbang
+    : false;
   export let pageInstance = nestedRoute ? page.create() : basePageInstance;
-
-  export let routes = nestedRoute
-    ? $subRouterRoutesByBasePath[basePath]
-    : routerConfig.routes;
+  export let routes = nestedRoute ? routerContext.subRoutes : config.routes;
+  export let basePath = nestedRoute
+    ? routerContext.basePath + (hashbang ? "#!" : "") + routerContext.parentPath
+    : config.basePath || "";
+  export let hidden = false;
 
   pageInstance.base(basePath);
+
+  if (!hashbang) isPageLoading.set(true);
 
   function parseBeforeRouteEnter(context, next) {
     if (get(path) !== context.canonicalPath) {
@@ -128,13 +132,11 @@
     }
   }
 
-  function parseAfterRouteEnter(context, isCustomChunk) {
+  function parseAfterRouteEnter(context) {
     const componentLoaderHandler = () => {
       isRouteLoading.set(false);
 
-      if (isCustomChunk) {
-        isPageLoading.set(false);
-      } else if (!get(isComponentLoading)) {
+      if (!get(isComponentLoading)) {
         isPageLoading.set(false);
       }
     };
@@ -189,43 +191,34 @@
       const route = paths[pathInPaths];
 
       const handler = (context) => {
-        let isCustomChunk = false;
-
-        try {
-          route.component();
-        } catch (e) {
-          if (e.toString().includes("new")) route.staticComponent = true;
-        }
-
         if (
-          typeof route.component !== "object" &&
+          typeof route.component.chunk === "undefined" &&
           typeof route.chunkGenerated === "undefined"
         ) {
           route.component = ChunkGenerator(
             route.component,
-            route.chunk || routerConfig.chunk || DefaultChunkComponent
+            route.chunk || config.chunk || DefaultChunkComponent
           ).chunk;
 
           route.chunkGenerated = true;
         }
 
-        if (typeof route.component === "object") {
+        if (typeof route.component.chunk !== "undefined") {
           route.component = route.component.chunk;
 
           route.chunkGenerated = true;
         }
 
-        if (route.component.name === "component" && !route.staticComponent) {
-          isCustomChunk = route.chunk ? true : !!routerConfig.chunk;
-
-          route.isCustomChunk = isCustomChunk;
-        }
-
         if (route.children !== null && typeof route.children === "object") {
-          subRouterRoutesByBasePath.update((value) => {
-            value[basePath + path] = route.children;
-            return value;
-          });
+          subRouterContext = {
+            basePath,
+            parentPath: path,
+            subRoutes: route.children,
+            parentContext: routerContext,
+            hashbang,
+          };
+        } else {
+          subRouterContext = null;
         }
 
         let params = {};
@@ -270,13 +263,11 @@
 
         component = route.component;
 
-        if (typeof route.component === "function" && !route.staticComponent) {
-          props = {
-            params,
-          };
-        } else props = params;
+        props = {
+          params,
+        };
 
-        if (!nestedRoute) parseAfterRouteEnter(context, isCustomChunk);
+        if (!nestedRoute) parseAfterRouteEnter(context);
       };
 
       pageInstance(
@@ -302,33 +293,46 @@
       click: false,
       popstate: false,
       dispatch: false,
+      hashbang,
     });
-  else pageInstance.start();
+  else pageInstance.start({ hashbang });
 
   if (nestedRoute) {
     const pathUnsubscribe = path.subscribe((value) => {
-      if (value.startsWith(pageInstance.base())) {
-        pageInstance.redirect(value);
+      if (
+        value.startsWith(pageInstance.base()) ||
+        (hashbang &&
+          value.startsWith(routerContext.basePath + routerContext.parentPath))
+      ) {
+        if (hashbang) {
+          if (!value.startsWith(pageInstance.base()))
+            value =
+              routerContext.basePath +
+              value.split(routerContext.basePath)[0] +
+              "#!" +
+              value.split(routerContext.basePath)[1];
+
+          pageInstance.show(value, false, true, false);
+        } else pageInstance.show(value);
       }
     });
 
     onDestroy(pathUnsubscribe);
-    onDestroy(() =>
-      subRouterRoutesByBasePath.update((list) => {
-        const newList = [];
-
-        Object.keys(list)
-          .filter((key) => key !== pageInstance.base())
-          .forEach((key) => (newList[key] = list[key]));
-
-        return newList;
-      })
-    );
   }
 
   onDestroy(() => pageInstance.stop());
 </script>
 
+<svelte:head>
+  {#if hashbang && !nestedRoute}
+    <base href="{basePath + '/'}" />
+  {/if}
+</svelte:head>
+
 <div hidden="{hidden}">
-  <svelte:component this="{component}" {...props} />
+  <svelte:component
+    this="{component}"
+    {...props}
+    subRouterContext="{subRouterContext}"
+  />
 </div>

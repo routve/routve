@@ -5,4 +5,4 @@
 Nested Routing example page
 <br />
 
-<Router basePath="/nested-route-page" />
+<Router />

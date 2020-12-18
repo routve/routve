@@ -2,7 +2,6 @@ import { ChunkGenerator } from "../src/index";
 import chunk from "./Chunk.svelte";
 
 import DefaultPage from "./pages/DefaultPage.svelte";
-import TestPage from "./pages/TestPage.svelte";
 
 const instancePage = ChunkGenerator(
   () => import("./pages/MultipleSameInstance/InstancePage.svelte"),
@@ -11,12 +10,13 @@ const instancePage = ChunkGenerator(
 
 export default {
   basePath: "",
+  hashbang: false,
   routes: {
     "/": {
       component: DefaultPage,
     },
     "/test-page": {
-      component: TestPage,
+      component: import("./pages/TestPage.svelte"),
     },
     "/test-page-async": {
       component: ChunkGenerator(

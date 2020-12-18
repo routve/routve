@@ -5,4 +5,4 @@
 Multiple same instance page
 <br />
 
-<Router basePath="/test-multiple-same-instance" />
+<Router />
