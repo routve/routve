@@ -58,7 +58,7 @@
 <script>
   import { onDestroy, getContext } from "svelte";
   import page from "page";
-  import Config from "./router.config";
+  import RouterConfig from "./router.config";
   import ChunkGenerator from "./ChunkGenerator";
   import qs from "qs";
 
@@ -70,24 +70,22 @@
   let component = null;
   let subRouterContext = null;
 
-  export let routerConfig = Config;
+  export let config = RouterConfig;
 
   const routerContext = getContext("routve.context");
   const nestedRoute =
-    routerConfig === Config && typeof routerContext !== "undefined";
+    config === RouterConfig && typeof routerContext !== "undefined";
 
   export let hashbang = nestedRoute
     ? routerContext.hashbang
-    : !!routerConfig.hashbang
-    ? routerConfig.hashbang
+    : !!config.hashbang
+    ? config.hashbang
     : false;
   export let pageInstance = nestedRoute ? page.create() : basePageInstance;
-  export let routes = nestedRoute
-    ? routerContext.subRoutes
-    : routerConfig.routes;
+  export let routes = nestedRoute ? routerContext.subRoutes : config.routes;
   export let basePath = nestedRoute
     ? routerContext.basePath + (hashbang ? "#!" : "") + routerContext.parentPath
-    : routerConfig.basePath || "";
+    : config.basePath || "";
   export let hidden = false;
 
   pageInstance.base(basePath);
@@ -199,7 +197,7 @@
         ) {
           route.component = ChunkGenerator(
             route.component,
-            route.chunk || routerConfig.chunk || DefaultChunkComponent
+            route.chunk || config.chunk || DefaultChunkComponent
           ).chunk;
 
           route.chunkGenerated = true;
