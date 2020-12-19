@@ -8,8 +8,7 @@ jobs:
       script:
         - yarn
       skip_cleanup: true
-    - stage: Build & publish
+    - stage: Publish
       script:
-        - yarn build
         - yarn semantic-release
       if: branch = master

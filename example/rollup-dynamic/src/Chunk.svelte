@@ -3,13 +3,13 @@
   import { get } from "svelte/store";
   import { onMount, setContext } from "svelte";
 
-  import { isClass } from "../src/util";
+  import { isClass } from "../../../src/util";
 
   import {
     isPageLoading,
     isRouteLoading,
     isComponentLoading,
-  } from "../src/RouterStore";
+  } from "../../../src/RouterStore";
 
   export let component;
   export let delay = 0;

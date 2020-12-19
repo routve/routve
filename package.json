@@ -1,23 +1,28 @@
 {
   "name": "routve",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Routve is an advanced Svelte 3 router.",
   "main": "src/index.js",
   "svelte": "src/index.js",
   "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -c -w",
-    "start": "sirv public -s -H 0.0.0.0",
-    "bump-version": "rjp package.json version $VERSION",
-    "semantic-release": "semantic-release",
+    "dev": "npx yarn dev:rollup-dynamic",
+    "dev:rollup-dynamic": "cd example/rollup-dynamic && npx yarn dev",
     "lint": "npm-run-all -c lint:*",
     "lint:prettier": "prettier -c . --config .prettierrc",
     "format": "npm-run-all -c format:*",
-    "format:prettier": "prettier --write . --config .prettierrc"
+    "format:prettier": "prettier --write . --config .prettierrc",
+    "install": "npm-run-all -p install:*",
+    "install:rollup-dynamic": "cd example/rollup-dynamic && npx yarn",
+    "update": "npm-run-all -p update:* && npx yarn install",
+    "update:rollup-dynamic": "cd example/rollup-dynamic && npx ncu -u",
+    "check-update": "npm-run-all -c check-update:*",
+    "check-update:rollup-dynamic": "cd example/rollup-dynamic && npx ncu",
+    "bump-version": "rjp package.json version $VERSION",
+    "semantic-release": "semantic-release"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn lint",
+      "pre-commit": "npx yarn lint",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
@@ -55,18 +60,8 @@
     "qs": "^6.9.4"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^17.0.0",
-    "@rollup/plugin-node-resolve": "^11.0.1",
-    "@rollup/plugin-replace": "^2.3.4",
     "prettier": "^2.2.1",
     "prettier-plugin-svelte": "^1.4.2",
-    "rimraf": "^3.0.2",
-    "rollup": "^2.35.1",
-    "rollup-plugin-livereload": "^2.0.0",
-    "rollup-plugin-svelte": "^7.0.0",
-    "rollup-plugin-terser": "^7.0.2",
-    "sirv-cli": "^1.0.10",
-    "svelte": "^3.22.2",
     "commitizen": "^4.2.2",
     "husky": "^4.3.6",
     "lint-staged": "^10.5.3",
@@ -78,6 +73,7 @@
     "@semantic-release/git": "^9.0.0",
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
-    "@commitlint/prompt": "^11.0.0"
+    "@commitlint/prompt": "^11.0.0",
+    "svelte": "^3.31.0"
   }
 }

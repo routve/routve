@@ -1,5 +1,5 @@
 <script>
-  import { route } from "../../src/index";
+  import { route } from "../../../../src";
 </script>
 
 <h3>Navigator</h3>

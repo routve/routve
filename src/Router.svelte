@@ -1,7 +1,7 @@
 <script context="module">
   import { basePageInstance } from "./RouterStore";
-  import { get, readable, writable } from "svelte/store";
-  import { path, isPageLoading } from "./RouterStore";
+  import { get, readable } from "svelte/store";
+  import { path, routeName, isPageLoading } from "./RouterStore";
 
   let beforeRouteEnterCallbacks = [];
   let afterRouteEnterCallbacks = [];
@@ -34,6 +34,10 @@
     return get(path);
   }
 
+  export function getRouteName() {
+    return get(routeName);
+  }
+
   export const pathReadable = readable(getPath(), (set) => {
     const pathUnSubscriber = path.subscribe((value) => {
       set(value);
@@ -41,6 +45,16 @@
 
     return function stop() {
       pathUnSubscriber();
+    };
+  });
+
+  export const routeNameReadable = readable(getRouteName(), (set) => {
+    const routeNameUnSubscriber = routeName.subscribe((value) => {
+      set(value);
+    });
+
+    return function stop() {
+      routeNameUnSubscriber();
     };
   });
 
@@ -84,7 +98,9 @@
   export let pageInstance = nestedRoute ? page.create() : basePageInstance;
   export let routes = nestedRoute ? routerContext.subRoutes : config.routes;
   export let basePath = nestedRoute
-    ? routerContext.basePath + (hashbang ? "#!" : "") + routerContext.parentPath
+    ? routerContext.parentBasePath +
+      (hashbang && !routerContext.hashAdded ? "#!" : "") +
+      routerContext.parentPath
     : config.basePath || "";
   export let hidden = false;
 
@@ -166,10 +182,6 @@
     } else componentLoaderHandler();
   }
 
-  if (!nestedRoute) {
-    pageInstance("*", parseBeforeRouteEnter);
-  }
-
   (function setupRouter(
     paths,
     parent = "",
@@ -190,7 +202,7 @@
 
       const route = paths[pathInPaths];
 
-      const handler = (context) => {
+      const routeHandler = (context) => {
         if (
           typeof route.component.chunk === "undefined" &&
           typeof route.chunkGenerated === "undefined"
@@ -210,14 +222,38 @@
         }
 
         if (route.children !== null && typeof route.children === "object") {
+          let hashAdded = !!routerContext ? routerContext.hashAdded : false;
+
+          if (!!routerContext && !routerContext.hashAdded) hashAdded = true;
+
           subRouterContext = {
-            basePath,
+            rootBasePath: !!routerContext
+              ? routerContext.rootBasePath
+              : basePath,
+            parentBasePath: basePath,
             parentPath: path,
             subRoutes: route.children,
             parentContext: routerContext,
             hashbang,
+            hashAdded,
           };
         } else {
+          if (!!route.name) {
+            routeName.set(route.name);
+          } else if (pathInPaths === "") {
+            if (!!routerContext) {
+              routeName.set(routerContext.parentPath + "/");
+            } else {
+              routeName.set("/");
+            }
+          } else {
+            if (!!routerContext) {
+              routeName.set(routerContext.parentPath + pathInPaths);
+            } else {
+              routeName.set(pathInPaths);
+            }
+          }
+
           subRouterContext = null;
         }
 
@@ -270,6 +306,14 @@
         if (!nestedRoute) parseAfterRouteEnter(context);
       };
 
+      const handler = (context) => {
+        if (nestedRoute) routeHandler(context);
+        else
+          parseBeforeRouteEnter(context, () => {
+            routeHandler(context);
+          });
+      };
+
       pageInstance(
         parent + path,
         parentHandler === null ? handler : parentHandler
@@ -301,19 +345,19 @@
     const pathUnsubscribe = path.subscribe((value) => {
       if (
         value.startsWith(pageInstance.base()) ||
-        (hashbang &&
-          value.startsWith(routerContext.basePath + routerContext.parentPath))
+        (hashbang && value.startsWith(pageInstance.base().replaceAll("#!", "")))
       ) {
-        if (hashbang) {
-          if (!value.startsWith(pageInstance.base()))
-            value =
-              routerContext.basePath +
-              value.split(routerContext.basePath)[0] +
-              "#!" +
-              value.split(routerContext.basePath)[1];
+        if (hashbang && routerContext.rootBasePath !== "") {
+          value = value.replace(pageInstance.base(), "");
+          value = value.replace(pageInstance.base().replace("#!", ""), "");
+        }
 
-          pageInstance.show(value, false, true, false);
-        } else pageInstance.show(value);
+        pageInstance.show(
+          (hashbang && !value.startsWith("#!") ? "#!" : "") + value,
+          false,
+          true,
+          false
+        );
       }
     });
 
