@@ -84,7 +84,9 @@
   export let pageInstance = nestedRoute ? page.create() : basePageInstance;
   export let routes = nestedRoute ? routerContext.subRoutes : config.routes;
   export let basePath = nestedRoute
-    ? routerContext.basePath + (hashbang ? "#!" : "") + routerContext.parentPath
+    ? routerContext.basePath +
+      (hashbang && !routerContext.hashAdded ? "#!" : "") +
+      routerContext.parentPath
     : config.basePath || "";
   export let hidden = false;
 
@@ -210,12 +212,17 @@
         }
 
         if (route.children !== null && typeof route.children === "object") {
+          let hashAdded = !!routerContext ? routerContext.hashAdded : false;
+
+          if (!!routerContext && !routerContext.hashAdded) hashAdded = true;
+
           subRouterContext = {
             basePath,
             parentPath: path,
             subRoutes: route.children,
             parentContext: routerContext,
             hashbang,
+            hashAdded,
           };
         } else {
           subRouterContext = null;
@@ -301,16 +308,18 @@
     const pathUnsubscribe = path.subscribe((value) => {
       if (
         value.startsWith(pageInstance.base()) ||
-        (hashbang &&
-          value.startsWith(routerContext.basePath + routerContext.parentPath))
+        (hashbang && value.startsWith(pageInstance.base().replaceAll("#!", "")))
       ) {
         if (hashbang) {
           if (!value.startsWith(pageInstance.base()))
             value =
               routerContext.basePath +
-              value.split(routerContext.basePath)[0] +
-              "#!" +
-              value.split(routerContext.basePath)[1];
+              (!routerContext.hashAdded ? "#!" : "") +
+              value.split(
+                !!routerContext.parentContext
+                  ? routerContext.basePath.replaceAll("#!", "")
+                  : routerContext.basePath
+              )[1];
 
           pageInstance.show(value, false, true, false);
         } else pageInstance.show(value);
