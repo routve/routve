@@ -49,10 +49,10 @@ Routve supports these features for now:
 - <strong>HTML5 history mode</strong> ~ which is typically `path routing`, ideal for SPA and SSR - thanks to `page.js`
 - <strong>Error 404 handling</strong> ~ Routve can handle all 404 error page requests if there is no matching route and if `*` is given as path
 - <strong>Programmatic navigation</strong> ~ just import `route` method and call it `route("/login")`
+- <strong>Route names</strong> ~ you can define specific route names or get route names
 
 #### There are also upcoming features:
 
-- <strong>`Route names`</strong>
 - <strong>`SSR support`</strong>
 - <strong>`Sapper support`</strong>
 
