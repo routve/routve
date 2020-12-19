@@ -1,7 +1,7 @@
 <script context="module">
   import { basePageInstance } from "./RouterStore";
-  import { get, readable, writable } from "svelte/store";
-  import { path, isPageLoading } from "./RouterStore";
+  import { get, readable } from "svelte/store";
+  import { path, routeName, isPageLoading } from "./RouterStore";
 
   let beforeRouteEnterCallbacks = [];
   let afterRouteEnterCallbacks = [];
@@ -34,6 +34,10 @@
     return get(path);
   }
 
+  export function getRouteName() {
+    return get(routeName);
+  }
+
   export const pathReadable = readable(getPath(), (set) => {
     const pathUnSubscriber = path.subscribe((value) => {
       set(value);
@@ -41,6 +45,16 @@
 
     return function stop() {
       pathUnSubscriber();
+    };
+  });
+
+  export const routeNameReadable = readable(getRouteName(), (set) => {
+    const routeNameUnSubscriber = routeName.subscribe((value) => {
+      set(value);
+    });
+
+    return function stop() {
+      routeNameUnSubscriber();
     };
   });
 
@@ -168,10 +182,6 @@
     } else componentLoaderHandler();
   }
 
-  if (!nestedRoute) {
-    pageInstance("*", parseBeforeRouteEnter);
-  }
-
   (function setupRouter(
     paths,
     parent = "",
@@ -192,7 +202,7 @@
 
       const route = paths[pathInPaths];
 
-      const handler = (context) => {
+      const routeHandler = (context) => {
         if (
           typeof route.component.chunk === "undefined" &&
           typeof route.chunkGenerated === "undefined"
@@ -228,6 +238,22 @@
             hashAdded,
           };
         } else {
+          if (!!route.name) {
+            routeName.set(route.name);
+          } else if (pathInPaths === "") {
+            if (!!routerContext) {
+              routeName.set(routerContext.parentPath + "/");
+            } else {
+              routeName.set("/");
+            }
+          } else {
+            if (!!routerContext) {
+              routeName.set(routerContext.parentPath + pathInPaths);
+            } else {
+              routeName.set(pathInPaths);
+            }
+          }
+
           subRouterContext = null;
         }
 
@@ -278,6 +304,14 @@
         };
 
         if (!nestedRoute) parseAfterRouteEnter(context);
+      };
+
+      const handler = (context) => {
+        if (nestedRoute) routeHandler(context);
+        else
+          parseBeforeRouteEnter(context, () => {
+            routeHandler(context);
+          });
       };
 
       pageInstance(

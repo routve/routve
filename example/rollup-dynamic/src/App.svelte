@@ -5,6 +5,7 @@
     // getPath,
     path,
     isPageLoading,
+    routeName,
   } from "../../../src";
   import RouterConfig from "./router.config";
   import { onDestroy } from "svelte";
@@ -27,9 +28,14 @@
     // console.log(value);
   });
 
+  const unsubscribeRouteName = routeName.subscribe((name) =>
+    console.log("Route name: " + name)
+  );
+
   onDestroy(beforeRouteEnterCallback);
   onDestroy(afterRouteEnterCallback);
   onDestroy(isPageLoadingReadable);
+  onDestroy(unsubscribeRouteName);
 </script>
 
 <h1>Welcome to Routve! Current route: {$path}</h1>

@@ -14,6 +14,7 @@ export default {
   routes: {
     "/": {
       component: DefaultPage,
+      name: "Home",
     },
     "/test-page": {
       component: import("./pages/TestPage.svelte"),

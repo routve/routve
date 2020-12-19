@@ -1,23 +1,27 @@
 // noinspection ES6CheckImport
 import {
-  afterRouteEnter,
-  beforeRouteEnter,
   default as Router,
+  beforeRouteEnter,
+  afterRouteEnter,
   getPath,
-  isPageLoadingReadable as isPageLoading,
+  getRouteName,
   pathReadable as path,
+  routeNameReadable as routeName,
+  isPageLoadingReadable as isPageLoading,
   route,
 } from "./Router.svelte";
 import ChunkGenerator from "./ChunkGenerator";
 
-export { ChunkGenerator };
 export {
-  route,
+  ChunkGenerator,
   beforeRouteEnter,
   afterRouteEnter,
   getPath,
+  getRouteName,
   path,
+  routeName,
   isPageLoading,
+  route,
 };
 
 export default Router;
