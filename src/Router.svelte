@@ -303,15 +303,25 @@
           params,
         };
 
+        if (!!route.afterRouteEnter) route.afterRouteEnter(context);
+
         if (!nestedRoute) parseAfterRouteEnter(context);
       };
 
       const handler = (context) => {
-        if (nestedRoute) routeHandler(context);
-        else
-          parseBeforeRouteEnter(context, () => {
-            routeHandler(context);
+        const routeToHandler = () => {
+          if (nestedRoute) routeHandler(context);
+          else
+            parseBeforeRouteEnter(context, () => {
+              routeHandler(context);
+            });
+        };
+
+        if (!!route.beforeRouteEnter)
+          route.beforeRouteEnter(context, () => {
+            routeToHandler();
           });
+        else routeToHandler();
       };
 
       pageInstance(

@@ -15,6 +15,13 @@ export default {
     "/": {
       component: DefaultPage,
       name: "Home",
+      beforeRouteEnter: (context, next) => {
+        // console.log("beforeRouteEnter");
+        next();
+      },
+      afterRouteEnter: (context) => {
+        // console.log("afterRouteEntered");
+      },
     },
     "/test-page": {
       component: import("./pages/TestPage.svelte"),
