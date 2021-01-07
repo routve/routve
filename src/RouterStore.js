@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 import page from "page";
 
-export const isPageLoading = writable(false);
+export const isPageLoading = writable(true);
 export const isComponentLoading = writable(true);
 export const isRouteLoading = writable(true);
 

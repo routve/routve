@@ -90,23 +90,22 @@
   const nestedRoute =
     config === RouterConfig && typeof routerContext !== "undefined";
 
-  export let hashbang = nestedRoute
-    ? routerContext.hashbang
-    : !!config.hashbang
-    ? config.hashbang
-    : false;
+  export let mode = nestedRoute
+    ? routerContext.routerMode
+    : !!config.mode
+    ? config.mode
+    : "history";
+
   export let pageInstance = nestedRoute ? page.create() : basePageInstance;
   export let routes = nestedRoute ? routerContext.subRoutes : config.routes;
   export let basePath = nestedRoute
     ? routerContext.parentBasePath +
-      (hashbang && !routerContext.hashAdded ? "#!" : "") +
+      (mode === "hashbang" && !routerContext.hashAdded ? "#!" : "") +
       routerContext.parentPath
     : config.basePath || "";
   export let hidden = false;
 
   pageInstance.base(basePath);
-
-  if (!hashbang) isPageLoading.set(true);
 
   function parseBeforeRouteEnter(context, next) {
     if (get(path) !== context.canonicalPath) {
@@ -234,7 +233,7 @@
             parentPath: path,
             subRoutes: route.children,
             parentContext: routerContext,
-            hashbang,
+            routerMode: mode,
             hashAdded,
           };
         } else {
@@ -347,23 +346,24 @@
       click: false,
       popstate: false,
       dispatch: false,
-      hashbang,
+      hashbang: mode === "hashbang",
     });
-  else pageInstance.start({ hashbang });
+  else pageInstance.start({ hashbang: mode === "hashbang" });
 
   if (nestedRoute) {
     const pathUnsubscribe = path.subscribe((value) => {
       if (
         value.startsWith(pageInstance.base()) ||
-        (hashbang && value.startsWith(pageInstance.base().replaceAll("#!", "")))
+        (mode === "hashbang" &&
+          value.startsWith(pageInstance.base().replaceAll("#!", "")))
       ) {
-        if (hashbang && routerContext.rootBasePath !== "") {
+        if (mode === "hashbang" && routerContext.rootBasePath !== "") {
           value = value.replace(pageInstance.base(), "");
           value = value.replace(pageInstance.base().replace("#!", ""), "");
         }
 
         pageInstance.show(
-          (hashbang && !value.startsWith("#!") ? "#!" : "") + value,
+          (mode === "hashbang" && !value.startsWith("#!") ? "#!" : "") + value,
           false,
           true,
           false
@@ -378,7 +378,7 @@
 </script>
 
 <svelte:head>
-  {#if hashbang && !nestedRoute}
+  {#if mode === 'hashbang' && !nestedRoute}
     <base href="{basePath + '/'}" />
   {/if}
 </svelte:head>
