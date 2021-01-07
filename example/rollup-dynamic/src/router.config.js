@@ -10,7 +10,7 @@ const instancePage = ChunkGenerator(
 
 export default {
   basePath: "",
-  hashbang: false,
+  mode: "history", // modes: history, hashbang
   routes: {
     "/": {
       component: DefaultPage,
