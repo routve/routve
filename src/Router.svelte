@@ -378,7 +378,7 @@
 </script>
 
 <svelte:head>
-  {#if mode === 'hashbang' && !nestedRoute}
+  {#if mode === "hashbang" && !nestedRoute}
     <base href="{basePath + '/'}" />
   {/if}
 </svelte:head>
@@ -387,6 +387,5 @@
   <svelte:component
     this="{component}"
     {...props}
-    subRouterContext="{subRouterContext}"
-  />
+    subRouterContext="{subRouterContext}" />
 </div>

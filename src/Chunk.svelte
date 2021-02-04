@@ -67,7 +67,7 @@
 {#if isPromise}
   {#await component.then(({ default: C }) => C) then component}
     <svelte:component this="{component}" {...params} />
-    {setPromiseLoaded() ? '' : ''}
+    {setPromiseLoaded() ? "" : ""}
   {/await}
 {:else if isStatic}
   <svelte:component this="{component}" {...params} />
@@ -75,7 +75,7 @@
   <Loadable loader="{component}" delay="{delay}">
     <div slot="success" let:component>
       <svelte:component this="{component}" {...params} />
-      {setLoadableLoaded() ? '' : ''}
+      {setLoadableLoaded() ? "" : ""}
     </div>
   </Loadable>
 {/if}
