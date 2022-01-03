@@ -3,7 +3,7 @@
   An advanced <a href="https://svelte.dev">Svelte 3</a> router.
 </p>
 <p align="center">
-  <img src="https://img.shields.io/maintenance/yes/2021?style=for-the-badge" alt="Maintained">
+  <img src="https://img.shields.io/maintenance/yes/2022?style=for-the-badge" alt="Maintained">
   <a href="https://travis-ci.com/github/routve/routve" target="_blank"><img src="https://img.shields.io/travis/com/routve/routve/dev?style=for-the-badge" alt="Travis CI Build Status"></a>
   <a href="https://www.npmjs.com/package/routve"><img src="https://img.shields.io/npm/v/routve.svg?sanitize=true&style=for-the-badge" alt="Version"></a>
   <a href="https://github.com/routve/routve/blob/dev/LICENSE"><img src="https://img.shields.io/npm/l/routve.svg?sanitize=true&style=for-the-badge" alt="License"></a>
