@@ -70,7 +70,7 @@
     "prettier": "^2.2.1",
     "prettier-plugin-svelte": "^2.1.5",
     "replace-json-property": "^1.6.3",
-    "semantic-release": "^17.3.9",
+    "semantic-release": "^19.0.3",
     "svelte": "^3.31.0"
   }
 }
