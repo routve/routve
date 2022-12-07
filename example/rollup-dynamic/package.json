@@ -9,7 +9,7 @@
   "dependencies": {
     "page": "^1.11.6",
     "svelte-loadable": "^1.5.1",
-    "qs": "^6.9.6"
+    "qs": "^6.9.7"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.1.0",
